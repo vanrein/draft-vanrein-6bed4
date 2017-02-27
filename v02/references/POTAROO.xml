@@ -1,0 +1,10 @@
+<reference anchor="POTAROO" target="http://www.potaroo.net/ispcol/2011-04/teredo.html">
+  <front>
+    <title>Testing Teredo</title>
+    <author initials="G." surname="Huston" fullname="Geoff Huston">
+        <organization>APNIC</organization>
+    </author>
+    <date year="2011" month="April"/>
+  </front>
+</reference>
+

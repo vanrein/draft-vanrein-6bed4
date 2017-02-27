@@ -1,0 +1,746 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt"?>
+<!DOCTYPE rfc SYSTEM "rfc2529.dtd">
+
+<?rfc toc="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc symrefs="yes" ?>
+<?rfc subcompact="no" ?>
+<?rfc comments="yes" ?>
+<?rfc inline="yes" ?>
+
+<rfc ipr="trust200902" docName="draft-vanrein-6bed4-02pre" category="std">
+
+
+<front>
+	<title abbrev="6bed4">6bed4: Peer-to-Peer IPv6 on Any Internetwork</title>
+	<author initials="R" surname="Van Rein" fullname="Rick van Rein">
+		<organization>OpenFortress B.V.</organization>
+		<address>
+			<postal>
+				<street>Haarlebrink 5</street>
+				<city>Enschede</city>
+				<region>Overijssel</region>
+				<code>7544 WP</code>
+				<country>The Netherlands</country>
+			</postal>
+			<email>rick@openfortress.nl</email>
+		</address>
+	</author>
+
+	<date day="16" month="January" year="2013"/>
+	<abstract>
+   <t>The intention of 6bed4 is to support IPv6-only applications, even on
+   IPv4-only networks.  A specific area of concern is that of peer-to-
+   peer protocols such as SIP or document exchange during a chat
+   session.  Such protocols are designed to run in any environment,
+   which means that they cannot rely on IPv6 for themselves, or their
+   peers.  The 6bed4 tunnel mechanism ensures that IPv6 can be assumed
+   on all peers, without a need to configure it explicitly.</t>
+
+   <t>The 6bed4 mechanism is meant as a fallback mechanism for IPv6
+   connectivity on networks that do not support it natively, by running
+   a tunnel over UDP and IPv4.  The IPv4 address is used to support
+   traceability of the traffic originator, which means that no user
+   account or other configuration is needed.</t>
+
+   <t>The tunnel mechanism builds on existing IPv6 mechanisms; it employs
+   Stateless Address Autoconfiguration [RFC4862] to setup an IPv6
+   address on a 6bed4 Peer, and Neighbor Discovery [RFC4861] to find the
+   most direct route to a remote 6bed4 Peer.</t>
+	</abstract>
+</front>
+
+
+<middle>
+
+<section title="Terminology" anchor="terms">
+
+<t>6bed4 address (source, destination) (general, direct)</t>
+
+<t>6bed4 peer</t>
+
+<t>native address</t>
+
+<t>public address</t>
+
+<t>internal address</t>
+
+<t>UDP/IPv4 stream</t>
+
+<t>6bed4 connection (direct ~, general ~) basically an UDP/IPv4 stream between two 6bed4 addresses</t>
+
+<t>endpoint-dependent mapping</t>
+
+</section>
+
+
+<section title="Wire Format of 6bed4 Frames" anchor="wireformat">
+
+<t>A 6bed4 frame is embedded into UDP and IPv4 and sent in that form
+over the Internet.  The origin IPv4 address and source UDP port together
+are referred to as the frame's Source 6bed4 Address; the destination IPv4
+address and destination UDP port together are referred to as the frame's
+Destination 6bed4 Address.</t>
+
+<t>The embedded contents of a 6bed4 frame always represents an IPv6
+frame.  The source IPv6 address encodes the origin 6bed4 address, and
+the destination IPv6 address encodes the destination 6bed4 address.
+In fact, there are two 6bed4 addresses over which the destination could
+be reached, directly or through a tunnel server.  Both are contained
+as part of the IPv6 addresses.</t>
+
+<t>Since 6bed4 embedding supports general IPv6 traffic, there is a
+well-defined form for carrying around ICMPv6 messages, specifically
+including Neighbor Discovery messages.  These are actively used to
+negotiate with 6bed4 peers.  Router Solicitation and Advertisement
+is used to determine a public address as seen by the remote peer;
+Neighbor Solicitation and Advertisement are used to determine if a
+remote 6bed4 peer can be reached at the direct 6bed4 address.</t>
+
+<t>Router Advertisements in 6bed4 frames are always /114 prefixes.
+This leaves 14 bits to distinguish hosts under the same prefix,
+quite possibly managed through static assignment or DHCPv6.</t>
+
+</section>
+
+
+
+<section title="Network Infrastructure" anchor="networkinfra">
+
+<t>The 6bed4 infrastructure does not refer to its components as
+tunnel clients and tunnel servers, but rather as 6bed4 peers and
+6bed4 servers.  This reflects the intent of making the endpoints,
+or peers, make direct UDP/IPv4 streams over which to exchange
+IPv6 traffic.</t>
+
+<t>A 6bed4 server has as its main purpose to provide information
+about the public 6bed4 address of a peer, and to serve as a fallback
+transit for those network setups in which direct UDP/IPv4 streams are not
+feasible.  Finally, the 6bed4 server is needed to connect a host that
+can only do 6bed4 to one that can only do native IPv6; precautions
+to avoid that situation follow.</t>
+
+<t>To be available to the outside world on a 6bed4 address, a 6bed4 peer
+sends a Router Solicitation to a 6bed4 server, and receives a Router
+Advertisement with a /114 prefix in return.  As shown in Section
+<xref target="wireformat"/>, the returned prefix includes the public
+6bed4 address that the peer can use, and enough to setup a local
+IPv6 address or, if so desired, a series of IPv6 addresses to
+assign locally.  It is then the local peer's task to keep open
+the UDP/IPv4 stream to the 6bed4 server, so as to ensure that
+the IPv6 address remains constant.  If it were to change, then the
+server would respond to sent traffic with a new Router Advertisement,
+offering a new /114 prefix and retracting the previous one.</t>
+
+<t>Before contacting a remote 6bed4 peer, it is advisable to send
+a Router Solicitation to the general 6bed4 address found in the
+remote IPv6 address.  This results in an alternate 6bed4 address
+to use locally for that contact attempt, avoiding trapezium-shaped
+traffic between peers.  This is guaranteed to always work.  To
+further optimise traffic, it is possible to send a Router Advertisement
+to the direct 6bed4 address contained in the remote IPv6 address; this
+may work and entirely remove the dependency on a tunnel server.</t>
+
+<t>At any time before or during communication with a peer through a
+tunnel server, it is possible to attempt direct contact by sending
+a Neighbor Solicitation to the peer's direct 6bed4 address, and
+observing if it is matched by a Neighbor Advertisement returned
+from that direct 6bed4 address.</t>
+
+<t>When such direct requests lead to matching direct responses, then
+it is safe to assume that direct traffic between the peers is possible
+for some time following.  This is because UDP/IPv4 has been passed,
+and the fact that it contained ICMPv6 cannot be inferred by the
+intermediate NAT routers or firewalls because the UDP format does not
+tag its contents.</t>
+
+<t>In all this, the UDP/IPv4 streams between peer and server, as well as
+directly between peers, is always a point-to-point UDP/IPv4 stream
+whose 6bed4 address will not be assumed to apply for other UDP/IPv4 streams.
+This is vital, as it evades the trap of making inductive assumptions
+about the behaviour of NAT or firewalls.  Section
+<xref target="nattraversal"/> for details of the deductive approach of
+6bed4 when it comes to NAT and firewall behaviour.</t>
+
+<t>It is common for IPv6 hosts to have multiple IPv6 addresses, and
+so the question which local and remote addresses to use.  This has been
+answered in TODO.
+In relation to 6bed4, it is important that native-to-native traffic precedes
+6bed4-to-6bed4, but also that 6bed4-6bed4 is preferred over either
+native-6bed4 or 6bed4-native, on account of its potential of direct routing
+and independency of a shared resource, the 6bed4 server.</t>
+
+<t>In addition to this, it is worth remarking that higher-layer applications
+could also make good use of 6bed4; for instance, a SIP server could observe
+a remote peer's 6bed4 address and offer media exchange on a 6bed4 address
+instead of a native IPv6 address, once more in an attempt to offload
+shared 6bed4 servers.</t>
+
+</section>
+
+
+<section title="IPv6 Address Format" anchor="addressformat">
+
+<t>The general format of an IPv6 address that can be embedded as 6bed4
+is as follows:
+<figure><preamble>The IPv6 address for 6bed4:</preamble>
+<artwork>
+  0       16                      64                      114
+ +-------+-------+-------+-------+-------+-------+-------+-------+
+ | TBD1  | general 6bed4 address | direct 6bed4 address   | lanip|
+ +-------+-------+-------+-------+-------+-------+-------+-------+
+ &lt;--------------------- /114 prefix ---------------------&gt;
+</artwork>
+</figure>
+</t>
+
+<t>The well-known TBD1::/16 prefix is important; it enables software to
+recognise this format in IPv6 addresses, and realise that traffic
+can be sent directly to a 6bed4 peer.  This format translates a single
+IPv4 address to a /48 prefix, which is the longest considered routeable;
+an IPv4 subnet such as a /24 or /16 translates to a shorter prefix, in
+these cases /40 and /32.  These routeable prefixes mean that there is no
+requirement for a /16 prefix service to facilitate 6bed4 on an
+unpredictable return path; instead, the infrastructure for routing
+IPv4 prefixes can be mirrorred in the 6bed4 routing infrastructure.
+Prefixes of 6bed4 addresses MUST be published in BGP by only those
+parties who are permitted to publish the corresponding IPv4 prefix
+in BGP.</t>
+
+<t>The prefix TBD1::/16 is only reserved for a period of ten years,
+starting at the date of publication of this specification.  Implementations
+that are aware of time MUST NOT implement 6bed4 after the final date; an
+extension of the final date is only possible through IETF consensus.
+This leaves five years for new applications to roll out IPv6 applications
+based on 6bed4, and another five years for the use of 6bed4 to cease
+to exist and native IPv6 to replace it.  Effectively, 6bed4 supports
+the assumption of IPv6 available anywhere, which should help the shift
+from IPv4 to IPV6.</t>
+
+<t>The general 6bed4 address MUST be generally reachable, both over
+6bed4 and native IPv6.
+This means that there MUST be a 6bed4 service running at the contained
+IPv4 address and UDP port; and also, that a BGP path MUST exist that
+routes native IPv6 traffic to a host that can forward IPv6 frames after
+embedding them in 6bed4 frames.  This facility is generally referred to
+as a 6bed4 server.</t>
+
+<t>The direct 6bed4 address MUST be reachable for 6bed4 frames from
+the general 6bed4 address, that is, from the 6bed4 server.  It represents the 6bed4 peer
+or, if the lanip part is used to further split a local network, then
+a local router offering 6bed4 service on the local network.  Note
+that the direct 6bed4 address MAY be reachable for other hosts as
+well, using 6bed4 frames; this is generally intended as it offloads
+the 6bed4 server and leads to direct UDP/IPv4 traffic between the
+6bed4 peers.</t>
+
+<figure><preamble>The general 6bed4 address:</preamble>
+<artwork>
++--------+--------+--------+--------+--------+--------+
+| IPv4.H | IPv4.h | IPv4.l | IPv4.L | UDP.H  | UDP.L  |
++--------+--------+--------+--------+--------+--------+
+    8        8        8        8        8        8
+</artwork>
+</figure>
+
+<figure><preamble>The direct 6bed4 address:</preamble>
+<artwork>
++------+--+--------+--------+--------+--------+--------+--+
+|IPv4.H|00| IPv4.h | IPv4.l | IPv4.L | UDP.H  | UDP.L  |HH|
++------+--+--------+--------+--------+--------+--------+--+
+   6    2     8        8        8        8        8     2
+</artwork>
+</figure>
+
+<t>The general 6bed4 address consists of a sequence of an IPv4 address
+and UDP port, both in network byte order.  The direct 6bed4 address
+is formatted slightly different in the IPv6 address, as the lower
+half of an IPv6 address must follow the EUI-64 format; its first
+byte has the lower two bits set to zero.  The replaced
+address bits are attached after the UDP port without changing their
+order.  As a result, the remaining size for the lanip field is
+14 bits.</t>
+
+<t>Note that it would be possible to assign meaning to non-zero
+values of the EUI-64 flag bits, but this specification does not
+detail how.  It could however be useful in an extension to 6bed4;
+multicast media streams
+are more likely with the greater address space of IPv6, and 6bed4
+could facilitate it because it makes IPv6 possible everywhere;
+and it could also be useful to support globally
+unique EUI-64 identifiers when the general 6bed4 address can
+address hosts locally.</t>
+
+<t>Mindful of the current specification and these possible extensions,
+this specification states that the two flag bits SHOULD be set
+to 0.  The lower half of the IPv6 address MUST NOT be interpreted
+to contain a direct 6bed4 address if the local/unique flag is
+set; in that case, it MAY be interpreted as a modified EUI-64
+address and potentially used for local routing if the upper half of
+the IPv6 address is in local use.  The unicast/multicast flag MAY be
+ignored, but is likely to be refined if this specification is enhanced
+with multicast capabilities.</t>
+
+<t>TODO: LAN-only or Carrier Grade NAT IPv4 addresses?  Never as general
+address, but how about direct 6bed4 address?  Introduce INVALID direct
+address, also for those with globally-unique bit in the OUI.  For LAN-only
+and CGN IPv4 addresses, require the same /64 prefix to support switching
+off INVALID. Hmm...</t>
+
+<t>In addition to the globally routeable IPv6 address format, there
+is a format for link-local addresses, which may be used for direct
+communication between 6bed4 peers or between a 6bed4 peer and a
+6bed4 server.  TODO.</t>
+
+</section>
+
+
+<section title="NAT and Firewall Traversal" anchor="nattraversal">
+
+<t>There is a wide variety of NAT router implementations, each with
+subtly different characteristics.  A similar thing applies to firewalls.
+This means that any approach to peering through NAT and firewalls that
+is to work in general must employ deductive reasoning-from-facts, and
+not induce information from an incomplete survey of NAT routers and
+firewalls.  Specifically, STUN [TODO]
+used to make such inductions which were later recalled [TODO].
+An IPv6 peering approach based on it [TODO] has indeed shown to
+not work in general [TODO].</t>
+
+<t>This specification assumes that outgoing UDP is supported.  The only
+imagined exception is due to manual override, where an admin prefers to
+control UDP based on port numbers.  It is not possible however to filter
+UDP traffic in general, because its lack of tagging of contents leaves
+no information but a mere port number to filter on.  As a result, an
+entire NAT router or firewall is limited to one default behaviour for
+all outgoing UDP traffic.  Otherwise, general UDP would not work.</t>
+
+<t>When sending UDP out through a NAT router, it will usually substitute
+the source IPv4 address and UDP port with an external IPv4 address and
+UDP port.  For UDP to behave normally, such substitutions must be the
+same when future frames are sent over the same UDP stream, so a mapping
+between internal and external IPv4 address and UDP port is assumed.  The
+NAT router can make a selection from the source and destination IPv4
+addresses and UDP ports to determine what mapping to apply, but as long
+as all these values match, the same UDP/IPv4 stream is recognised and
+the same mapping must be applied.</t>
+
+<t>Firewalls have a similar mapping, albeit not for substituting an
+address and port, but to recognise if traffic has been sent out over
+a UDP/IPv4 stream.  Other than this difference, it generally behaves
+under the same constraints as a mapping in a NAT router.</t>
+
+<t>UDP has no formal end marker for a UDP/IPv4 stream, so the only thing
+that a router can do is guess when a stream has ended.  It is assumed
+by this specification that a mapping is kept active for a minimum time,
+and revived at least when traffic is sent out along the stream, as that
+is the only reasonable thing an implementation can do without making UDP
+unreliable.  This means that a keepalive mechanism is needed in a number
+of places, and the timer triggering that mechanism must be a setting
+that the end user can influence.  Experiments [TODO] have shown that
+a default setting of 30 seconds is quite likely to work.</t>
+
+<t>UDP in general is a bidirectional protocol, so when outbound traffic
+is accepted over an UDP/IPv4 stream, then reply traffic within that
+stream must also be accepted.  Otherwise, a firewall or NAT router
+would break the UDP protocol.  Note once again that there is no tagging
+of content in UDP, so there can only be one default policy.  There is
+only one way that a NAT router can redirect such traffic internally,
+and that is by applying the mapping for the UDP/IPv4 stream in reverse.
+This sends the reply traffic back to the internal host that initiated
+the outbound side of the UDP/IPv4 stream.</t>
+
+<t>Finally, firewalls and NAT routers are assumed to not inspect the
+contents of an UDP/IPv4 stream.  This is a fair assumption because of
+the lacking content tagging in UDP.  Network components that alter
+the contents of UDP frames have been reported [TODO] but are downright
+broken.  They may need to be replaced before 6bed4 can function; unlike
+Teredo, 6bed4 will not reduce the risk of running into such bugs by
+obfuscation of addresses and ports contained in 6bed4 frames.</t>
+
+<t>Note specifically, that 6bed4 makes no assumption about sharing
+the same mapping for different UDP/IPv4 streams; an public IPv4
+address and UDP port may be the same for two remote peers, or they
+may differ.  As far as 6bed4 concerns, they are separately administered
+mappings.</t>
+
+<t>Also note that 6bed4 is not aware of any classification of NAT
+routers or firewalls.  Instead, it will simply try if IPv6 traffic
+between peers is possible by sending a frame directly to a peer
+and matching it with a return frame.  Since these are carried as
+part of a UDP/IPv4 stream with no content tagging, a NAT router
+cannot treat this test exchange any differently from "real" data,
+and so it is possible to exchange traffic directly for as long as
+the UDP/IPv4 stream is considered to be mapped.  This may be for
+a limited time, but that time can be extended through keepalive
+messages if so desired.</t>
+
+<t>A concrete example where public addresses differ, is if the
+same internal IPv4 address and UDP port is used for a UDP/IPv4
+stream to a 6bed4 server and a 6bed4 peer, while it is behind
+a NAT router that applies endpoint-dependent mapping to UDP/IPv4
+streams.  This would mean that it is not possible to make a
+direct connection between such peers.  This does become possible
+when an initial Router Solicitation is sent directly to the
+remote 6bed4 peer, and when a reply is received directly.  This
+procedure is optional in a 6bed4 implementation.</t>
+
+</section>
+
+
+<section title="Filtering 6bed4 Traffic" anchor="filtering">
+
+<t>TODO: Check if trapezium-routing is accepted.</t>
+
+<t>Any tunnel should guard against being abused to claims
+to addresses "inside" the tunnel based on clients "outside"
+the tunnel that should not be able to make such claims.
+In the case of 6bed4, this means that the 6bed4 address from
+which a 6bed4 frame arrives must match with the IPv6 sender
+address.</t>
+
+<t>Both 6bed4 servers and 6bed4 peers MUST silently discard any
+6bed4-embedded frame that is not an proper IPv6 message; example
+conditions to implement that would be:
+<list style="symbols">
+<t>the embedded frame length is less than that of an IPv6 header</t>
+<t>the embedded frame does not start with nibble 6</t>
+<t>the embedded frame length differs from the total IPv6 frame length</t>
+<t>there are checksum errors in TCP, ICMPv6 or UDP headers</t>
+</list>
+</t>
+
+<t>In case of a 6bed4 server, this means that the direct 6bed4
+address contained in the IPv6 address MUST match the 6bed4 address
+from which the 6bed4 frame arrived.  In case of a 6bed4 peer, this
+means that either the general or the direct 6bed4 address contained
+in the IPv6 address MUST match the 6bed4 address from which the
+6bed4 frame arrived.  In addition, a 6bed4 server MUST also
+validate its own IPv4 address (or subnet) and UDP port against
+the IPv6 address claimed, so as to assure that it matches any
+return traffic over native IPv6, as a result of its BGP announcement.</t>
+
+<t>In cases where the lower half of the IPv6 address indicates
+a globally unique lower half, the direct 6bed4 address cannot be
+retrieved from the IPv6 address, and so it is not possible to make
+the aforementioned filtering matches.  A remote peer could still
+accept a 6bed4 frame on account of the general 6bed4 address in
+the IPv6 address, but it MUST NOT try to read a direct 6bed4
+address from the IPv6 address.  Obviously, in situations like
+these the 6bed4 server would follow other rules because it
+implemented a different sort of mapping.</t>
+
+<t>When a filter rejects a 6bed4 frame on account of a mismatch
+between the 6bed4 sender address and the suggested IPv6 address,
+it should respond with a Router Advertisement that retracts the
+/114 prefix used in the IPv6 address, and offer a new /114 prefix
+that would have matched to replace it.</t>
+
+<t>A 6bed4 server MAY apply additional filtering to limit its
+use to a particular subset of 6bed4 peers; for instance, the users
+of an ISP or a commercial 6bed4 service.  To this end, it would
+ensure that 6bed4 frames are passed either from or to a direct
+6bed4 address that is accepted.  This MUST NOT be done on a
+6bed4 router that is available on the well-known 6bed4 addres
+range 145.136.0/24 because that MUST remain open to anyone.</t>
+
+<t>The only messages exempted from all aforementioned filtering
+are Router Solicitation frames targeting a link-local IPv6 address,
+and having their IPv6 Hop Limit set to 255.  Those messages receive
+a Router Advertisement frame in reply, containing the /114 prefix
+that matches the 6bed4 address of the originator of the solicitation.
+Specifically note that even a commercially exploited 6bed4 server
+MUST welcome Router Solicitation from prospective peers that intend
+to avoid trapezium-shaped routing.</t>
+
+</section>
+
+
+<section title="Optimistic Peering">
+
+<t>Direct UDP/IPv4 streams between 6bed4 peers is an explicit goal
+of the 6bed4 mechanism; this is achieved by simply trying an exchange
+over UDP/IPv4 and reliance on the non-interpretation of UDP to infer
+that the entire UDP/IPv4 stream must be possible if a single exchange
+works bidirectionally.</t>
+
+<t>It is vitally important that the traffic follows the same path in
+both directions.  This is because it is only safe to assume that
+outgoing traffic in a UDP/IPv4 stream keeps NAT router and firewalls
+open for return traffic.  Specifically, these network components need
+to see the same UDP ports and IPv4 addresses for the traffic in both
+directions, albeit with their source and destination roles exchanged.
+To ensure this, a 6bed4 peer that receives direct traffic from a
+remote peer that it would address through a 6bed4 server MUST start
+one of the following methods to setup direct peering.</t>
+
+<t>The one thing left to specify is how peering is initiated.  This
+is done by one of the following methods to setup direct peering,
+applied optimistically.  This can basically be done at any time
+deemed fitting, but it is suggested to employ some form of rate
+limiting for optimistic peering attempts.  A few useful places
+to do this would be to send a Router Advertisement to a direct
+6bed4 address before sending it to its general 6bed4 address; or
+to send Neighbor Discovery sometime during the normal exchange;
+or to do it during the setup of a TCP/IPv6 stream.</t>
+
+<t>The following sections introduce a general framework for
+setting up direct peering.  It continues with a few concrete
+examples, some of which must be implemented with 6bed4.  There
+are certainly opportunities for other specific implementations
+of the general optimistic mechanism.</t>
+
+
+<section title="General Framework for Peering Setup" anchor="generaloptimisticpeering">
+
+<!--
+<t>Peering is possible if two-way traffic has shown to be possible through direct peering connections.  It is important to distinguish this from a direct response to a request through a general 6bed4 address, or vice versa.  In these cases, a unidirectional link could be possible, but that would not keep NAT routers and firewalls open.</t>
+
+<t>On the other hand, it may be required for one of the 6bed4 peers to take an initiative, fail and then later succeed after the other peer has tried the same.  This can be caused by a closed NAT router or firewall in the remote 6bed4 peer, which is opened by its attempt to direct contact.</t>
+-->
+
+<t>The generic framework for peering setup assumes that a direct message may be lost.  To avoid the need for resending queues, it is therefore assumed that these messages are expandable.  They must either be re-sent by higher protocol layers, or they must be generated for the specific purpose of trying direct connectivity.</t>
+
+<t>Another aspect of the generic framework is that it must be possible to relate an incoming direct reply to an outgoing direct request, and only a direct outgoing request.  This can be established with a nonce if a frame is generated for the purposes of 6bed4 peer detection; or if a higher protocol layer generates the message, then the time between the first send and a later re-send is the window during which the direct response is considered a reliable sign of bidirectional traffic.</t>
+
+
+</section>
+
+<section title="Neighbor-based Peering Setup" anchor="neighboroptimisticpeering">
+
+<t>One mechanism that MUST be implemented in all 6bed4 peers is that of peering setup through Neighbor Discovery.  This comes down to sending a Neighbor Solictation over 6bed4, using the IPv6 address of the remote peer as the requested address, and receiving a reply in the form of a Neighbor Advertisement.  In short, this is reachability detection.  The usual ICMPv6 requirement of a Hop Limit equal to 255 applies here, and is not invalidated by the underlying UDP/IPv4 transport.</t>
+
+<t>In order to ensure that a response is in reply to a request, as well as to thwart attemts to overtake traffic, a nonce following [TODO] MUST be sent as part of the Neighbor Solicitation.  A 6bed4 peer MUST respond to Neighbor Solicitation with Hop Limit 255 and its own address information as destination with a Neighbor Advertisement with Hop Limit 255, and it MUST include the nonce it found in the Neighbor Solicitation, if any.</t>
+
+<t>A 6bed4 peer wanting to setup direct communication may use this mechanism at any time; it is safe because it does not interfere with the actual data stream between the peers.  Neighbor Discovery SHOULD NOT be sent to the 6bed4 server, and it certainly MUST NOT include a nonce that was also used when communicating with a 6bed4 peer.</t>
+
+</section>
+
+<section title="Router-based Peering Setup" anchor="routeroptimisticpeering">
+
+<t>Another mechanism that SHOULD be implemented in 6bed4 peers, and that MUST be implemented in 6bed4 servers, is responding to Router Discovery messages with the Hop Limit set to 255.  The response should be composed of the /64 prefix that applies to the 6bed4 server in use, and the lower half should be composed from the 6bed4 address over which the request was received.  If a nonce is included, it MUST be handled as for neighbor discovery.  A 6bed4 peer MUST include a nonce if it sends out a Router Discovery message.</t>
+
+</section>
+
+
+<section title="TCP-based Peering Setup" anchor="tcpoptimisticpeering">
+
+<t>This mechanism MAY be incorporated into 6bed4 implementations that run
+TCP over 6bed4.  It piggy-backs on the SYN and ACK flags exchanged while
+setting up a TCP connection to a remote 6bed4 peer, and introduces peering
+optimistically and, quite possibly, without any explicit messaging for
+setting it up.</t>
+
+<t>TCP-based peering is based on the SYN flag sent initially by a new
+TCP connection being setup, and the ACK flag sent to acknowledge it.
+Furthermore, it assumes that the TCP stack wil resend a failed first
+SYN attempt.</t>
+
+<t>The first SYN sent to a remote 6bed4 peer would be sent to the
+direct 6bed4 address of the remote peer; if it reports back with the
+ACK flag set, then a direct connection was clearly possible.  If this
+response does not arrive before the TCP-stack re-sends the SYN fame,
+then this and further attempts are sent to the general 6bed4 address,
+until further inspiration triggers another attempt at direct peering.</t>
+
+<t>The endpoint information in TCP as well as window offsets are
+used to recognise the SYN attempt, and later pairing the ACK to it.
+This means that the conditions are available for certainty that a
+direct attempt is paired with a direct response.</t>
+
+<t>Note that this mechanism works in both directions; as the passive
+side responds to a SYN with ACK, it usually sends its own SYN flag in
+hope of an ACK back from the active side.  This second exchange can
+follow the same rules to detect bidirectional connectivity from the
+other side.  Sending that first ACK along with the second SYN also
+means that a first attempt is made through direct peering.</t>
+
+<t>This facility is useful for 6bed4-based server addresses; given
+that the 6bed4 address can be approached directly thanks to a public
+IPv4 address or port forwarding, it is then possible for any remote
+6bed4 peer to connect directly to the 6bed4 address of the host, thus
+enabling IPv6 addressing over IPv4 routing paths.</t>
+
+
+</section>
+
+
+<section title="SIP-supported Peering Setup" anchor="sipoptimisticpeering">
+
+<t>Another example of optimistic peering that can be advantageous for
+a specific application is SIP.  A SIP exchange consists of a request
+and one or more responses.  The application software is well aware of
+the distinction between those, and can prove useful to facilitate 6bed4
+peering if it integrates the network layers.</t>
+
+<t>SIP messages, when sent over UDP, are prone to resends if a response
+is not received for some time.  As a result, it is possible to first
+attempt sending to the remote peer's direct 6bed4 address, and send
+later retries to the general 6bed4 address.  As with TCP, it is possible
+to treat as proof of direct peering any incoming direct responses between
+the intial request and its re-sends through the general 6bed4 address.</t>
+
+<t>The link between a SIP request and its response is easily made with
+the identifying parts of the message; these are embedded in text and
+would thus rely on application integration with 6bed4.  The parts are
+contained in the Call-ID: header, From: tag and optionally the To: tag.
+In addition, the top Via: header contains a branch parameter that
+identifies the exchange. TODO:via-only?</t>
+
+</section>
+
+
+</section>
+
+
+
+<section title="Requirements and Profiles" anchor="profiles">
+
+<t>This section introduces a number of descriptions of nodes involved
+with 6bed4.  The minimum requirements for 6bed4 servers and 6bed4 peers
+are described, as well as a number of specific profiles that demonstrate
+how 6bed4 can be employed flexibly.</t>
+
+<section title="Requirements for 6bed4 Servers" anchor="serverreqs">
+
+<t>TODO: RouterAdv -- always a 6bed4 prefix?  If not, 6bed4 peers cannot
+assume that peering will work.</t>
+
+<t>A 6bed4 server MUST filter incoming 6bed4 frames as specified in Section <xref target="filtering"/>.</t>
+
+<t>A 6bed4 server MUST respond to well-formed Router Solicitations from any 6bed4 peer, and to invalid incoming 6bed4 frames from any source with a Router Advertisement, by advertising the /114 prefix that starts with the well-known prefix TBD1::/16, followed by its own 6bed4 address as the general 6bed4 address, and the requesting 6bed4 address as the direct 6bed4 address.  When responding to invalid incoming traffic, it MUST also retract the /114 prefix that matches the origin address in the incoming 6bed4 frame.</t>
+
+<t>A 6bed4 server MUST be published in BGP with at least the 6bed4 address that it assigns in Router Advertisements as the general 6bed4 address, and MAY be published in BGP with a larger prefix.  The 6bed4 server MUST receive all native IPv6 traffic sent to this published prefix.</t>
+
+<t>A 6bed4 server SHOULD forward native IPv6 frames to 6bed4 addresses after embedding them in a 6bed4 frame; the destination 6bed4 address is the direct 6bed4 address if the general 6bed4 address matches the server, or otherwise the destination 6bed4 address is the general 6bed4 address.  Not doing this in all situations is a conscious limitation of the service, possibly for commercial reasons.  If the 6bed4 server runs on the well-known IPv4 address 145.136.0.1 it MUST forward such traffic.</t>
+
+<t>A 6bed4 server SHOULD forward 6bed4 frames to native IPv6 addresses after unpacking the 6bed4 frames.  Not doing this in all situations is a conscious limitation of the service, possibly for commercial reasons.  If the 6bed4 server runs on the well-known IPv4 address 145.136.0.1 it MUST forward such traffic.</t>
+
+<t>A 6bed4 server SHOULD forward 6bed4 frames to 6bed4 addresses by relaying them to the general 6bed4 address contained in the target IPv6 address; the destination 6bed4 address is the direct 6bed4 address.  Not doing this in all situations is a conscious limitation of the service, possibly for commercial reasons.  If the 6bed4 server runs on the well-known IPv4 address 145.136.0.1 it MUST forward such traffic.</t>
+
+<t>When responding to Neighbor Solicitation or Router Solicitation, a 6bed4 server MUST copy any nonce and timing information from the request into the response.</t>
+
+</section>
+
+<section title="Requirements for 6bed4 Peers" anchor="peerreqs">
+
+<t>A 6bed4 peer MUST filter incoming 6bed4 frames as specified in Section <xref target="filtering"/>.</t>
+
+<t>A 6bed4 peer SHOULD respond to well-formed Router Solicitations from any 6bed4 peer, and to invalid incoming 6bed4 frames from any source with a Router Advertisement, by advertising the /114 prefix that starts with the well-known prefix TBD1::/16, followed by its own 6bed4 address as the general 6bed4 address, and the requesting 6bed4 address as the direct 6bed4 address.  When responding to invalid incoming traffic, it MUST also retract the /114 prefix that matches the origin address in the incoming 6bed4 frame.</t>
+
+<t>TODO: MAY send through 6bed4 server as a default route</t>
+
+<t>When setting up a 6bed4 connection to a remote 6bed4 address, a 6bed4 peer SHOULD prefer an address for the local side of the 6bed4 connection that starts with the same /64 prefix as the remote peer's.  If no such address is available locally, it may be acquired by sending a Router Solicitation to the remote peer's direct 6bed4 address, and it can certainly be acquired by sending a Router Solicitation to the remote peer's general 6bed4 address.  These mechanisms are recommended until the local 6bed4 address is not bound.</t>
+
+<t>A 6bed4 peer MUST respond to received Neighbor Solicitation messages with Neighbor Discovery messages, to implement Optimistic Peering as specified in Section <xref target="generaloptimisticpeering"/>.  It MAY also implement other mechanisms for Optimistic Peering specified in that section.</t>
+
+<t>When communicating with a 6bed4 connection, a 6bed4 peer SHOULD attempt to setup a direct 6bed4 connection according to the Optimistic Peering procedures described in Section <xref target="generaloptimisticpeering"/>.</t>
+
+<t>When receiving 6bed4 frames over a direct 6bed4 connection when not being setup to perform direct 6bed4 peering to the originating 6bed4 address, a 6bed4 peer MUST perform Optimistic Peering through Neighbor Solicitation.  If an attempt is already in motion, then no new attempts are required.</t>
+
+<t>A 6bed4 peer SHOULD send a nonce and timing information in any sent Neighbor Solicitation and Router Solicitation.</t>
+
+<t>When responding to Neighbor Solicitation or Router Solicitation, a 6bed4 peer MUST copy any nonce and timing information from the request into the response.</t>
+
+<t>A 6bed4 peer SHOULD send keepalive messages to keep the UDP/IPv4 stream underlying active 6bed4 connections open.  A keepalive message MAY be a valid IPv6 message or anything else embedded in 6bed4, or it may even be an empty message embedded in 6bed4.  It MAY be sent with an IPv4 Time To Live that is so low that the keepalive message just makes it to the public Internet, after having crossed local NAT routers and firewalls.  The timing interval of a keepalive message SHOULD be a user setting, and it MAY be set to a safe low value of 30 seconds.</t>
+
+</section>
+
+<section title="En-route 6bed4 Service Profile" anchor="enrouteprofile">
+
+<t>The en-route profile for 6bed4 is useful when embedding the 6bed4 service into an ISP's services, or even within a router/gateway or LAN.  In all cases, the well-known address 145.136.0.1 is recognised as a target, and redirected to a 6bed4 service that runs locally.</t>
+
+<t>It would be possible for ISPs or local administrators to respond to a Router Advertisement with a /114 prefix that does not reside under the TBD1::/16 prefix.  If this is done, it will appear as a native address on the public Internet.  It should be noted that there is no danger of trapezium-shaped routing when en-route service is created, but that this will always lead to a triangle-shape routing to remote 6bed4 peers who now cannot support direct peering.</t>
+
+</section>
+
+<section title="Aggregated 6bed4 Service Profile" anchor="aggregatedprofile">
+
+<t>While a 6bed4 server can run on a single IPv4 address, it is possible to announce a shorter IPv6 prefix than the matching /48 in BGP.  One reason for doing this is to support individual network users at their full IPv4 address to create 6bed4 servers.  The responsibility of the BGP-announced route is then to relay incoming native IPv6 traffic to those 6bed4 servers as 6bed4 frames, or as native IPv6 traffic.</t>
+
+<t>An application of this profile would be a rackspace hosting provider that wants to support 6bed4 customer's servers running on the On-server Profile specified below.  Another application of this profile would be an ISP that makes 6bed4 service available to individual end-users who may run a service on their local networks.</t>
+
+</section>
+
+
+<section title="On-server 6bed4 Service Profile" anchor="onserverprofile">
+
+<t>A server can run its own 6bed4 server annex 6bed4 peer if it gets the matching IPv6 /48 prefix announced in BGP, or if an aggregated announcement is made by the network provider.</t>
+
+<t>The IPv6 addresses in such a setup simply mention the same general 6bed4 address and direct 6bed4 address, and the implementation combines the requirements of 6bed4 server and 6bed4 peer, however with a short-circuit for transmission from the 6bed4 server to 6bed4 peer.  TODO: is this consitent?</t>
+
+<t>When using a fixed IPv4 address, and when binding the 6bed4 service to a fixed port, then the 6bed4 address is fixed, and so is the IPv6 address to reach this service over 6bed4.  This makes it possible to announce services in DNS at their 6bed4 IPv6 address, possibly in addition to a native IPv6 address.</t>
+
+</section>
+
+
+<section title="LAN-serving 6bed4 Service Profile" anchor="lanserviceprofile">
+
+<t>A router or gateway, even as small as a home gateway, can run its own 6bed4 server if its ISP implements the aggregated service profile for the IPv4 address assigned to the gateway.  Through port forwarding or a router module, it would then be possible to implement 6bed4 on the local network.</t>
+
+<t>In these setups, it is possible to offer a /64 prefix on the local network, and permit hosts to perform autoconfiguration based on their MAC address.  The resulting addresses will have the flag set that signals the address as globally unique, so no remote 6bed4 peer would try to interpret the resulting address as a combination of an IPv4 address and a UDP port.  Local network addresses with the globaly-unique flag reset MUST NOT be exposed to the public Internet, not even to native peers, and such local addresses SHOULD be actively discouraged.</t>
+
+</section>
+
+
+</section>
+
+
+<section title="Reducing Depenedency on Server Infrastructure" anchor="reducingserverinfradependency">
+
+<t>TODO</t>
+
+</section>
+
+
+<section title="Implementation Concerns">
+
+<t>One potential implementation of a 6bed4 tunnel interface would exploit
+the Neighbor Cache in an IPv6 host to facilitate storage and timing of
+the various neighboring relationships.  Indeed, the timeouts of such
+relations are generally shorter than NAT mapping timeouts.  It should
+however be noted that not all Neighbor Caches are designed for large-scale
+operation, and that an active server could choke on that.  Furthermore,
+there is no keepalive mechanism built into such neighbor caches, which
+means that one or more peering relations could loose their address when
+no traffic is exchanged for some time.</t>
+
+</section>
+
+
+<section title="IANA Considerations" anchor="iana">
+
+<t>This specification reserves a 16-bit address prefix in the IPv6
+address space for a period of ten years, starting from the date of
+publication of this specification.</t>
+
+<t>The prefix is TBD1::/16 and will be exclusively used for 6bed4
+addresses.</t>
+
+<t>The UDP port TBD2 is allocated as the default port for 6bed4
+frame send and reception.</t>
+
+<t>The IPv4 address range 145.136.0/24 and specifically the address
+145.136.0.1 are donated back to the community as an anycast address on
+which 6bed4 service can be obtained without configuration.</t>
+
+</section>
+
+
+<section title="Security Considerations" anchor="security">
+
+<t>TODO -- RFC 6169 -- egress filter -- bypass firewalls</t>
+
+</section>
+
+</middle>
+
+
+<back>
+<section title="TODO:back matter">
+<t>TODO</t>
+</section>
+</back>
+
+</rfc>

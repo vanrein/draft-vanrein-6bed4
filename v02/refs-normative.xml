@@ -1,0 +1,577 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<references title="Normative References">
+
+<reference anchor="IEEE-EUI64">
+<front>
+<title>Guidelines for 64-bit Global Identifier (EUI-64TM)</title>
+<author>
+<organization>IEEE</organization>
+</author>
+<date year="2013" day="23" month="December" />
+</front>
+<!-- <seriesInfo name="IEEE Std" value="802.1Q" /> -->
+<format type='PDF' octets='124241' target='http://standards.ieee.org/develop/regauth/tut/eui64.pdf' />
+</reference>
+
+<reference anchor='RFC1918'>
+
+<front>
+<title>Address Allocation for Private Internets</title>
+<author initials='Y.' surname='Rekhter' fullname='Yakov Rekhter'>
+<organization>Cisco systems</organization>
+<address>
+<postal>
+<street>170 West Tasman Drive</street>
+<city>San Jose</city>
+<region>CA</region>
+<code>95134-1706</code>
+<country>US</country></postal>
+<phone>+1 914 528 0090</phone>
+<facsimile>+1 408 526 4952</facsimile>
+<email>yakov@cisco.com</email></address></author>
+<author initials='R.' surname='Moskowitz' fullname='Robert G. Moskowitz'>
+<organization>Chrysler Corporation</organization>
+<address>
+<postal>
+<street>25999 Lawrence Ave</street>
+<city>Center Line</city>
+<region>MI</region>
+<code>48015</code>
+<country>US</country></postal>
+<phone>+1 810 758 8212</phone>
+<facsimile>+1 810 758 8173</facsimile>
+<email>rgm3@is.chrysler.com</email></address></author>
+<author initials='D.' surname='Karrenberg' fullname='Daniel Karrenberg'>
+<organization>RIPE Network Coordination Centre</organization>
+<address>
+<postal>
+<street>Kruislaan 409</street>
+<city>Amsterdam</city>
+<region />
+<code>1098 SJ</code>
+<country>NL</country></postal>
+<phone>+31 20 5925065</phone>
+<facsimile>+31 20 5925090</facsimile>
+<email>Daniel.Karrenberg@ripe.net</email></address></author>
+<author initials='G.' surname='Groot' fullname='Geert Jan de Groot'>
+<organization>RIPE Network Coordination Centre</organization>
+<address>
+<postal>
+<street>Kruislaan 409</street>
+<city>Amsterdam</city>
+<region />
+<code>1098 SJ</code>
+<country>NL</country></postal>
+<phone>+31 20 5925065</phone>
+<facsimile>+31 20 5925090</facsimile>
+<email>GeertJan.deGroot@ripe.net</email></address></author>
+<author initials='E.' surname='Lear' fullname='Eliot Lear'>
+<organization>Silicon Graphics, Inc.</organization>
+<address>
+<postal>
+<street>2011 N. Shoreline Blvd.</street>
+<street>Mail Stop 15-730</street>
+<city>Mountain View</city>
+<region>CA</region>
+<code>94043-1389</code>
+<country>US</country></postal>
+<phone>+1 415 960 1980</phone>
+<facsimile>+1 415 961 9584</facsimile>
+<email>lear@sgi.com</email></address></author>
+<date year='1996' month='February' /></front>
+
+<seriesInfo name='BCP' value='5' />
+<seriesInfo name='RFC' value='1918' />
+<format type='TXT' octets='22270' target='http://www.rfc-editor.org/rfc/rfc1918.txt' />
+</reference>
+
+<reference anchor='RFC2119'>
+
+<front>
+<title abbrev='RFC Key Words'>Key words for use in RFCs to Indicate Requirement Levels</title>
+<author initials='S.' surname='Bradner' fullname='Scott Bradner'>
+<organization>Harvard University</organization>
+<address>
+<postal>
+<street>1350 Mass. Ave.</street>
+<street>Cambridge</street>
+<street>MA 02138</street></postal>
+<phone>- +1 617 495 3864</phone>
+<email>sob@harvard.edu</email></address></author>
+<date year='1997' month='March' />
+<area>General</area>
+<keyword>keyword</keyword>
+<abstract>
+<t>
+   In many standards track documents several words are used to signify
+   the requirements in the specification.  These words are often
+   capitalized.  This document defines these words as they should be
+   interpreted in IETF documents.  Authors who follow these guidelines
+   should incorporate this phrase near the beginning of their document:
+
+<list>
+<t>
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      RFC 2119.
+</t></list></t>
+<t>
+   Note that the force of these words is modified by the requirement
+   level of the document in which they are used.
+</t></abstract></front>
+
+<seriesInfo name='BCP' value='14' />
+<seriesInfo name='RFC' value='2119' />
+<format type='TXT' octets='4723' target='http://www.rfc-editor.org/rfc/rfc2119.txt' />
+<format type='HTML' octets='17970' target='http://xml.resource.org/public/rfc/html/rfc2119.html' />
+<format type='XML' octets='5777' target='http://xml.resource.org/public/rfc/xml/rfc2119.xml' />
+</reference>
+
+<reference anchor='RFC2372'>
+
+<front>
+<title abbrev='TIP'>Transaction Internet Protocol - Requirements and Supplemental Information</title>
+<author initials='K.' surname='Evans' fullname='Keith Evans'>
+<organization>Tandem Computers Inc, LOC 252-30</organization>
+<address>
+<postal>
+<street>5425 Stevens Creek Blvd</street>
+<street>Santa Clara</street>
+<street>CA 95051-7200</street>
+<country>USA</country></postal>
+<phone>+1 (408) 285 5314</phone>
+<facsimile>+1 (408) 285 5245</facsimile>
+<email>Keith.Evans@Tandem.Com</email></address></author>
+<author initials='J.' surname='Klein' fullname='Johannes Klein'>
+<organization>Tandem Computers Inc.</organization>
+<address>
+<postal>
+<street>10555 Ridgeview Court</street>
+<street>Cupertino</street>
+<street>CA 95014-0789</street>
+<country>USA</country></postal>
+<phone>+1 (408) 285 0453</phone>
+<facsimile>+1 (408) 285 9818</facsimile>
+<email>Johannes.Klein@Tandem.Com</email></address></author>
+<author initials='J.' surname='Lyon' fullname='Jim Lyon'>
+<organization>Microsoft Corporation</organization>
+<address>
+<postal>
+<street>One Microsoft Way</street>
+<street>Redmond</street>
+<street>WA  98052-6399</street>
+<country>USA</country></postal>
+<phone>+1 (206) 936 0867</phone>
+<facsimile>+1 (206) 936 7329</facsimile>
+<email>JimLyon@Microsoft.Com</email></address></author>
+<date year='1998' month='July' />
+<area>Applications</area>
+<keyword>transaction</keyword>
+<abstract>
+<t>
+   This document describes the purpose (usage scenarios), and
+   requirements for the Transaction Internet Protocol . It is
+   intended to help qualify the necessary features and functions of the
+   protocol. It also provides supplemental information to aid
+   understanding and facilitate implementation of the TIP protocol.
+</t></abstract></front>
+
+<seriesInfo name='RFC' value='2372' />
+<format type='TXT' octets='53699' target='http://www.rfc-editor.org/rfc/rfc2372.txt' />
+<format type='XML' octets='51926' target='http://xml.resource.org/public/rfc/xml/rfc2372.xml' />
+</reference>
+
+<reference anchor='RFC3056'>
+
+<front>
+<title>Connection of IPv6 Domains via IPv4 Clouds</title>
+<author initials='B.' surname='Carpenter' fullname='B. Carpenter'>
+<organization /></author>
+<author initials='K.' surname='Moore' fullname='K. Moore'>
+<organization /></author>
+<date year='2001' month='February' />
+<abstract>
+<t>This memo specifies an optional interim mechanism for IPv6 sites to communicate with each other over the IPv4 network without explicit tunnel setup, and for them to communicate with native IPv6 domains via relay routers. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='3056' />
+<format type='TXT' octets='54902' target='http://www.rfc-editor.org/rfc/rfc3056.txt' />
+</reference>
+
+<reference anchor='RFC3095'>
+
+<front>
+<title>RObust Header Compression (ROHC): Framework and four profiles: RTP, UDP, ESP, and uncompressed</title>
+<author initials='C.' surname='Bormann' fullname='C. Bormann'>
+<organization /></author>
+<author initials='C.' surname='Burmeister' fullname='C. Burmeister'>
+<organization /></author>
+<author initials='M.' surname='Degermark' fullname='M. Degermark'>
+<organization /></author>
+<author initials='H.' surname='Fukushima' fullname='H. Fukushima'>
+<organization /></author>
+<author initials='H.' surname='Hannu' fullname='H. Hannu'>
+<organization /></author>
+<author initials='L-E.' surname='Jonsson' fullname='L-E. Jonsson'>
+<organization /></author>
+<author initials='R.' surname='Hakenberg' fullname='R. Hakenberg'>
+<organization /></author>
+<author initials='T.' surname='Koren' fullname='T. Koren'>
+<organization /></author>
+<author initials='K.' surname='Le' fullname='K. Le'>
+<organization /></author>
+<author initials='Z.' surname='Liu' fullname='Z. Liu'>
+<organization /></author>
+<author initials='A.' surname='Martensson' fullname='A. Martensson'>
+<organization /></author>
+<author initials='A.' surname='Miyazaki' fullname='A. Miyazaki'>
+<organization /></author>
+<author initials='K.' surname='Svanbro' fullname='K. Svanbro'>
+<organization /></author>
+<author initials='T.' surname='Wiebke' fullname='T. Wiebke'>
+<organization /></author>
+<author initials='T.' surname='Yoshimura' fullname='T. Yoshimura'>
+<organization /></author>
+<author initials='H.' surname='Zheng' fullname='H. Zheng'>
+<organization /></author>
+<date year='2001' month='July' />
+<abstract>
+<t>This document specifies a highly robust and efficient header compression scheme for RTP/UDP/IP (Real-Time Transport Protocol, User Datagram Protocol, Internet Protocol), UDP/IP, and ESP/IP (Encapsulating Security Payload) headers. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='3095' />
+<format type='TXT' octets='368746' target='http://www.rfc-editor.org/rfc/rfc3095.txt' />
+</reference>
+
+<reference anchor='RFC3261'>
+
+<front>
+<title>SIP: Session Initiation Protocol</title>
+<author initials='J.' surname='Rosenberg' fullname='J. Rosenberg'>
+<organization /></author>
+<author initials='H.' surname='Schulzrinne' fullname='H. Schulzrinne'>
+<organization /></author>
+<author initials='G.' surname='Camarillo' fullname='G. Camarillo'>
+<organization /></author>
+<author initials='A.' surname='Johnston' fullname='A. Johnston'>
+<organization /></author>
+<author initials='J.' surname='Peterson' fullname='J. Peterson'>
+<organization /></author>
+<author initials='R.' surname='Sparks' fullname='R. Sparks'>
+<organization /></author>
+<author initials='M.' surname='Handley' fullname='M. Handley'>
+<organization /></author>
+<author initials='E.' surname='Schooler' fullname='E. Schooler'>
+<organization /></author>
+<date year='2002' month='June' />
+<abstract>
+<t>This document describes Session Initiation Protocol (SIP), an application-layer control (signaling) protocol for creating, modifying, and terminating sessions with one or more participants.  These sessions include Internet telephone calls, multimedia distribution, and multimedia conferences. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='3261' />
+<format type='TXT' octets='647976' target='http://www.rfc-editor.org/rfc/rfc3261.txt' />
+</reference>
+
+<reference anchor='RFC3489'>
+
+<front>
+<title>STUN - Simple Traversal of User Datagram Protocol (UDP) Through Network Address Translators (NATs)</title>
+<author initials='J.' surname='Rosenberg' fullname='J. Rosenberg'>
+<organization /></author>
+<author initials='J.' surname='Weinberger' fullname='J. Weinberger'>
+<organization /></author>
+<author initials='C.' surname='Huitema' fullname='C. Huitema'>
+<organization /></author>
+<author initials='R.' surname='Mahy' fullname='R. Mahy'>
+<organization /></author>
+<date year='2003' month='March' />
+<abstract>
+<t>Simple Traversal of User Datagram Protocol (UDP) Through Network Address Translators (NATs) (STUN) is a lightweight protocol that allows applications to discover the presence and types of NATs and firewalls between them and the public Internet.  It also provides the ability for applications to determine the public Internet Protocol (IP) addresses allocated to them by the NAT.  STUN works with many existing NATs, and does not require any special behavior from them.  As a result, it allows a wide variety of applications to work through existing NAT infrastructure. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='3489' />
+<format type='TXT' octets='117562' target='http://www.rfc-editor.org/rfc/rfc3489.txt' />
+</reference>
+
+<reference anchor='RFC4291'>
+
+<front>
+<title>IP Version 6 Addressing Architecture</title>
+<author initials='R.' surname='Hinden' fullname='R. Hinden'>
+<organization /></author>
+<author initials='S.' surname='Deering' fullname='S. Deering'>
+<organization /></author>
+<date year='2006' month='February' />
+<abstract>
+<t>This specification defines the addressing architecture of the IP Version 6 (IPv6) protocol. The document includes the IPv6 addressing model, text representations of IPv6 addresses, definition of IPv6 unicast addresses, anycast addresses, and multicast addresses, and an IPv6 node's required addresses.&lt;/t>&lt;t> This document obsoletes RFC 3513, "IP Version 6 Addressing Architecture". [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='4291' />
+<format type='TXT' octets='52897' target='http://www.rfc-editor.org/rfc/rfc4291.txt' />
+</reference>
+
+<reference anchor='RFC4380'>
+
+<front>
+<title>Teredo: Tunneling IPv6 over UDP through Network Address Translations (NATs)</title>
+<author initials='C.' surname='Huitema' fullname='C. Huitema'>
+<organization /></author>
+<date year='2006' month='February' />
+<abstract>
+<t>We propose here a service that enables nodes located behind one or more IPv4 Network Address Translations (NATs) to obtain IPv6 connectivity by tunneling packets over UDP; we call this the Teredo service.  Running the service requires the help of "Teredo servers" and "Teredo relays".  The Teredo servers are stateless, and only have to manage a small fraction of the traffic between Teredo clients; the Teredo relays act as IPv6 routers between the Teredo service and the "native" IPv6 Internet.  The relays can also provide interoperability with hosts using other transition mechanisms such as "6to4". [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='4380' />
+<format type='TXT' octets='132607' target='http://www.rfc-editor.org/rfc/rfc4380.txt' />
+</reference>
+
+<reference anchor='RFC4787'>
+
+<front>
+<title>Network Address Translation (NAT) Behavioral Requirements for Unicast UDP</title>
+<author initials='F.' surname='Audet' fullname='F. Audet'>
+<organization /></author>
+<author initials='C.' surname='Jennings' fullname='C. Jennings'>
+<organization /></author>
+<date year='2007' month='January' />
+<abstract>
+<t>This document defines basic terminology for describing different types of Network Address Translation (NAT) behavior when handling Unicast UDP and also defines a set of requirements that would allow many applications, such as multimedia communications or online gaming, to work consistently.  Developing NATs that meet this set of requirements will greatly increase the likelihood that these applications will function properly.  This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.</t></abstract></front>
+
+<seriesInfo name='BCP' value='127' />
+<seriesInfo name='RFC' value='4787' />
+<format type='TXT' octets='68693' target='http://www.rfc-editor.org/rfc/rfc4787.txt' />
+</reference>
+
+<reference anchor='RFC4861'>
+
+<front>
+<title>Neighbor Discovery for IP version 6 (IPv6)</title>
+<author initials='T.' surname='Narten' fullname='T. Narten'>
+<organization /></author>
+<author initials='E.' surname='Nordmark' fullname='E. Nordmark'>
+<organization /></author>
+<author initials='W.' surname='Simpson' fullname='W. Simpson'>
+<organization /></author>
+<author initials='H.' surname='Soliman' fullname='H. Soliman'>
+<organization /></author>
+<date year='2007' month='September' />
+<abstract>
+<t>This document specifies the Neighbor Discovery protocol for IP Version 6.  IPv6 nodes on the same link use Neighbor Discovery to discover each other's presence, to determine each other's link-layer addresses, to find routers, and to maintain reachability information about the paths to active neighbors. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='4861' />
+<format type='TXT' octets='235106' target='http://www.rfc-editor.org/rfc/rfc4861.txt' />
+</reference>
+
+<reference anchor='RFC4862'>
+
+<front>
+<title>IPv6 Stateless Address Autoconfiguration</title>
+<author initials='S.' surname='Thomson' fullname='S. Thomson'>
+<organization /></author>
+<author initials='T.' surname='Narten' fullname='T. Narten'>
+<organization /></author>
+<author initials='T.' surname='Jinmei' fullname='T. Jinmei'>
+<organization /></author>
+<date year='2007' month='September' />
+<abstract>
+<t>This document specifies the steps a host takes in deciding how to autoconfigure its interfaces in IP version 6.  The autoconfiguration process includes generating a link-local address, generating global addresses via stateless address autoconfiguration, and the Duplicate Address Detection procedure to verify the uniqueness of the addresses on a link. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='4862' />
+<format type='TXT' octets='72482' target='http://www.rfc-editor.org/rfc/rfc4862.txt' />
+</reference>
+
+<reference anchor='RFC4941'>
+
+<front>
+<title>Privacy Extensions for Stateless Address Autoconfiguration in IPv6</title>
+<author initials='T.' surname='Narten' fullname='T. Narten'>
+<organization /></author>
+<author initials='R.' surname='Draves' fullname='R. Draves'>
+<organization /></author>
+<author initials='S.' surname='Krishnan' fullname='S. Krishnan'>
+<organization /></author>
+<date year='2007' month='September' />
+<abstract>
+<t>Nodes use IPv6 stateless address autoconfiguration to generate addresses using a combination of locally available information and information advertised by routers.  Addresses are formed by combining network prefixes with an interface identifier.  On an interface that contains an embedded IEEE Identifier, the interface identifier is typically derived from it.  On other interface types, the interface identifier is generated through other means, for example, via random number generation.  This document describes an extension to IPv6 stateless address autoconfiguration for interfaces whose interface identifier is derived from an IEEE identifier.  Use of the extension causes nodes to generate global scope addresses from interface identifiers that change over time, even in cases where the interface contains an embedded IEEE identifier.  Changing the interface identifier (and the global scope addresses generated from it) over time makes it more difficult for eavesdroppers and other information collectors to identify when different addresses used in different transactions actually correspond to the same node. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='4941' />
+<format type='TXT' octets='56699' target='http://www.rfc-editor.org/rfc/rfc4941.txt' />
+</reference>
+
+<reference anchor='RFC4960'>
+
+<front>
+<title>Stream Control Transmission Protocol</title>
+<author initials='R.' surname='Stewart' fullname='R. Stewart'>
+<organization /></author>
+<date year='2007' month='September' />
+<abstract>
+<t>This document obsoletes RFC 2960 and RFC 3309. It describes the Stream Control Transmission Protocol (SCTP). SCTP is designed to transport Public Switched Telephone Network (PSTN) signaling messages over IP networks, but is capable of broader applications.&lt;/t>&lt;t> SCTP is a reliable transport protocol operating on top of a connectionless packet network such as IP. It offers the following services to its users:&lt;/t>&lt;t> -- acknowledged error-free non-duplicated transfer of user data,&lt;/t>&lt;t> -- data fragmentation to conform to discovered path MTU size,&lt;/t>&lt;t> -- sequenced delivery of user messages within multiple streams, with an option for order-of-arrival delivery of individual user messages,&lt;/t>&lt;t> -- optional bundling of multiple user messages into a single SCTP packet, and&lt;/t>&lt;t> -- network-level fault tolerance through supporting of multi-homing at either or both ends of an association.&lt;/t>&lt;t> The design of SCTP includes appropriate congestion avoidance behavior and resistance to flooding and masquerade attacks. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='4960' />
+<format type='TXT' octets='346022' target='http://www.rfc-editor.org/rfc/rfc4960.txt' />
+</reference>
+
+<reference anchor='RFC5389'>
+
+<front>
+<title>Session Traversal Utilities for NAT (STUN)</title>
+<author initials='J.' surname='Rosenberg' fullname='J. Rosenberg'>
+<organization /></author>
+<author initials='R.' surname='Mahy' fullname='R. Mahy'>
+<organization /></author>
+<author initials='P.' surname='Matthews' fullname='P. Matthews'>
+<organization /></author>
+<author initials='D.' surname='Wing' fullname='D. Wing'>
+<organization /></author>
+<date year='2008' month='October' />
+<abstract>
+<t>Session Traversal Utilities for NAT (STUN) is a protocol that serves as a tool for other protocols in dealing with Network Address Translator (NAT) traversal. It can be used by an endpoint to determine the IP address and port allocated to it by a NAT. It can also be used to check connectivity between two endpoints, and as a keep-alive protocol to maintain NAT bindings. STUN works with many existing NATs, and does not require any special behavior from them.&lt;/t>&lt;t> STUN is not a NAT traversal solution by itself. Rather, it is a tool to be used in the context of a NAT traversal solution. This is an important change from the previous version of this specification (RFC 3489), which presented STUN as a complete solution.&lt;/t>&lt;t> This document obsoletes RFC 3489. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='5389' />
+<format type='TXT' octets='125650' target='http://www.rfc-editor.org/rfc/rfc5389.txt' />
+</reference>
+
+<reference anchor='RFC6169'>
+
+<front>
+<title>Security Concerns with IP Tunneling</title>
+<author initials='S.' surname='Krishnan' fullname='S. Krishnan'>
+<organization /></author>
+<author initials='D.' surname='Thaler' fullname='D. Thaler'>
+<organization /></author>
+<author initials='J.' surname='Hoagland' fullname='J. Hoagland'>
+<organization /></author>
+<date year='2011' month='April' />
+<abstract>
+<t>A number of security concerns with IP tunnels are documented in this memo.  The intended audience of this document includes network administrators and future protocol developers.  The primary intent of this document is to raise the awareness level regarding the security issues with IP tunnels as deployed and propose strategies for the mitigation of those issues. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='6169' />
+<format type='TXT' octets='45018' target='http://www.rfc-editor.org/rfc/rfc6169.txt' />
+</reference>
+
+<reference anchor='RFC6455'>
+
+<front>
+<title>The WebSocket Protocol</title>
+<author initials='I.' surname='Fette' fullname='I. Fette'>
+<organization /></author>
+<author initials='A.' surname='Melnikov' fullname='A. Melnikov'>
+<organization /></author>
+<date year='2011' month='December' />
+<abstract>
+<t>The WebSocket Protocol enables two-way communication between a client running untrusted code in a controlled environment to a remote host that has opted-in to communications from that code.  The security model used for this is the origin-based security model commonly used by web browsers.  The protocol consists of an opening handshake followed by basic message framing, layered over TCP.  The goal of this technology is to provide a mechanism for browser-based applications that need two-way communication with servers that does not rely on opening multiple HTTP connections (e.g., using XMLHttpRequest or &amp;lt;iframe&amp;gt;s and long polling). [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='6455' />
+<format type='TXT' octets='162067' target='http://www.rfc-editor.org/rfc/rfc6455.txt' />
+</reference>
+
+<reference anchor='RFC6496'>
+
+<front>
+<title>Secure Proxy ND Support for SEcure Neighbor Discovery (SEND)</title>
+<author initials='S.' surname='Krishnan' fullname='S. Krishnan'>
+<organization /></author>
+<author initials='J.' surname='Laganier' fullname='J. Laganier'>
+<organization /></author>
+<author initials='M.' surname='Bonola' fullname='M. Bonola'>
+<organization /></author>
+<author initials='A.' surname='Garcia-Martinez' fullname='A. Garcia-Martinez'>
+<organization /></author>
+<date year='2012' month='February' />
+<abstract>
+<t>SEcure Neighbor Discovery (SEND) specifies a method for securing Neighbor Discovery (ND) signaling against specific threats.  As defined today, SEND assumes that the node sending an ND message is the owner of the address from which the message is sent and/or possesses a key that authorizes the node to act as a router, so that it is in possession of the private key or keys used to generate the digital signature on each message.  This means that the Proxy ND signaling performed by nodes that do not possess knowledge of the address owner's private key and/or knowledge of a router's key cannot be secured using SEND.  This document extends the current SEND specification in order to secure Proxy ND operation.  This document defines an Experimental Protocol for the Internet community.</t></abstract></front>
+
+<seriesInfo name='RFC' value='6496' />
+<format type='TXT' octets='57746' target='http://www.rfc-editor.org/rfc/rfc6496.txt' />
+</reference>
+
+<reference anchor='RFC6598'>
+
+<front>
+<title>IANA-Reserved IPv4 Prefix for Shared Address Space</title>
+<author initials='J.' surname='Weil' fullname='J. Weil'>
+<organization /></author>
+<author initials='V.' surname='Kuarsingh' fullname='V. Kuarsingh'>
+<organization /></author>
+<author initials='C.' surname='Donley' fullname='C. Donley'>
+<organization /></author>
+<author initials='C.' surname='Liljenstolpe' fullname='C. Liljenstolpe'>
+<organization /></author>
+<author initials='M.' surname='Azinger' fullname='M. Azinger'>
+<organization /></author>
+<date year='2012' month='April' />
+<abstract>
+<t>This document requests the allocation of an IPv4 /10 address block to be used as Shared Address Space to accommodate the needs of Carrier- Grade NAT (CGN) devices. It is anticipated that Service Providers will use this Shared Address Space to number the interfaces that connect CGN devices to Customer Premises Equipment (CPE).&lt;/t>&lt;t> Shared Address Space is distinct from RFC 1918 private address space because it is intended for use on Service Provider networks. However, it may be used in a manner similar to RFC 1918 private address space on routing equipment that is able to do address translation across router interfaces when the addresses are identical on two different interfaces. Details are provided in the text of this document.&lt;/t>&lt;t> This document details the allocation of an additional special-use IPv4 address block and updates RFC 5735. This memo documents an Internet Best Current Practice.</t></abstract></front>
+
+<seriesInfo name='BCP' value='153' />
+<seriesInfo name='RFC' value='6598' />
+<format type='TXT' octets='22055' target='http://www.rfc-editor.org/rfc/rfc6598.txt' />
+</reference>
+
+<reference anchor='RFC6724'>
+
+<front>
+<title>Default Address Selection for Internet Protocol Version 6 (IPv6)</title>
+<author initials='D.' surname='Thaler' fullname='D. Thaler'>
+<organization /></author>
+<author initials='R.' surname='Draves' fullname='R. Draves'>
+<organization /></author>
+<author initials='A.' surname='Matsumoto' fullname='A. Matsumoto'>
+<organization /></author>
+<author initials='T.' surname='Chown' fullname='T. Chown'>
+<organization /></author>
+<date year='2012' month='September' />
+<abstract>
+<t>This document describes two algorithms, one for source address selection and one for destination address selection. The algorithms specify default behavior for all Internet Protocol version 6 (IPv6) implementations. They do not override choices made by applications or upper-layer protocols, nor do they preclude the development of more advanced mechanisms for address selection. The two algorithms share a common context, including an optional mechanism for allowing administrators to provide policy that can override the default behavior. In dual-stack implementations, the destination address selection algorithm can consider both IPv4 and IPv6 addresses -- depending on the available source addresses, the algorithm might prefer IPv6 addresses over IPv4 addresses, or vice versa.&lt;/t>&lt;t> Default address selection as defined in this specification applies to all IPv6 nodes, including both hosts and routers. This document obsoletes RFC 3484. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='6724' />
+<format type='TXT' octets='74407' target='http://www.rfc-editor.org/rfc/rfc6724.txt' />
+</reference>
+
+<reference anchor='RFC7059'>
+
+<front>
+<title>A Comparison of IPv6-over-IPv4 Tunnel Mechanisms</title>
+<author initials='S.' surname='Steffann' fullname='S. Steffann'>
+<organization /></author>
+<author initials='I.' surname='van Beijnum' fullname='I. van Beijnum'>
+<organization /></author>
+<author initials='R.' surname='van Rein' fullname='R. van Rein'>
+<organization /></author>
+<date year='2013' month='November' />
+<abstract>
+<t>This document provides an overview of various ways to tunnel IPv6 packets over IPv4 networks.  It covers mechanisms in current use, touches on several mechanisms that are now only of historic interest, and discusses some newer tunnel mechanisms that are not widely used at the time of publication.  The goal of the document is helping people with an IPv6-in-IPv4 tunneling need to select the mechanisms that may apply to them.</t></abstract></front>
+
+<seriesInfo name='RFC' value='7059' />
+<format type='TXT' octets='98886' target='http://www.rfc-editor.org/rfc/rfc7059.txt' />
+</reference>
+
+<reference anchor='BCP38'>
+<front>
+<title>Network Ingress Filtering: Defeating Denial of Service Attacks which employ IP Source Address Spoofing</title>
+<author initials='P.' surname='Ferguson' fullname='P. Ferguson'>
+<organization /></author>
+<author initials='D.' surname='Senie' fullname='D. Senie'>
+<organization /></author>
+<date year='2000' month='May' />
+<abstract>
+<t>This paper discusses a simple, effective, and straightforward method for using ingress traffic filtering to prohibit DoS (Denial of Service) attacks which use forged IP addresses to be propagated from 'behind' an Internet Service Provider's (ISP) aggregation point.  This document specifies an Internet Best Current P
+ractices for the Internet Community, and requests discussion and suggestions for
+ improvements.</t></abstract></front>
+<seriesInfo name='BCP' value='38' />
+<seriesInfo name='RFC' value='2827' />
+<format type='TXT' octets='21258' target='http://www.rfc-editor.org/rfc/rfc2827.
+txt' />
+</reference>
+
+
+<reference anchor="POTAROO" target="http://www.potaroo.net/ispcol/2011-04/teredo.html">
+  <front>
+    <title>Testing Teredo</title>
+    <author initials="G." surname="Huston" fullname="Geoff Huston">
+        <organization>APNIC</organization>
+    </author>
+    <date year="2011" month="April"/>
+  </front>
+</reference>
+
+
+</references>
+

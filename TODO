@@ -1,0 +1,7 @@
+- Consider ALPN [RFC 7301] to set the "6bed4" protocol; srv differentiate of flag
+- Add a tunnel type for RADIUS, as per RFC2868
+	requires IETF Consensus; that is not okay as per RFC 5226
+	https://www.rfc-editor.org/about/independent/
+- Consider it as a part of the Funnel Tunnel (per TCP or for all IP)
+- Consider keeping RoHC as a separate prt of Funnel Tunnel
+- Would probably call for coro implementation?

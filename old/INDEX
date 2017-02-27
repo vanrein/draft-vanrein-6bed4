@@ -1,0 +1,118 @@
+
+ * terminology
+    * 6bed4 address = (v4addr,udpPort)
+    * native address = not-6bed4 address
+
+ * wire format
+    * 6bed4 embeds IPv6 into UDP, IPv4
+    * representation of 6bed4 addresses: v4addr,udpPort in net order, 6 bytes
+    * make use of ND packets for routersol/adv, neighborsol/adv
+    * router advertisements are /114 instead of /64 based
+    * low half respects EOI by setting local and unicast bits to 0
+
+ * network infrastructure
+    * peers (and servers)
+    * ask server for public IPv6 address (and keep UDP port open)
+    * make no assumptions about NAT/firewalls, except out=ok and timeout>30s
+    * connect directly between 6bed4 peers
+    * use server to route to native, and as a fallback router for 6bed4
+    * use higher-layer techniques to do optimal pairing
+    * 10 year limit for NTP-aware devices; extension takes IETF action
+
+ +-------+-------+-------+-------+-------+-------+-------+-------+
+ |prefix | general 6bed4 address | direct 6bed4 address   | lanip|
+ +-------+-------+-------+-------+-------+-------+-------+-------+
+
+ general 6bed4 address:
+	 +--------+--------+--------+--------+--------+--------+
+	 | IPv4.H | IPv4.h | IPv4.l | IPv4.L | UDP.H  | UDP.L  |
+	 +--------+--------+--------+--------+--------+--------+
+	     8        8        8        8        8        8
+
+ direct 6bed4 address:
+	 +------+--+--------+--------+--------+--------+--------+--+
+	 |IPv4.H|00| IPv4.h | IPv4.l | IPv4.L | UDP.H  | UDP.L  |HH|
+	 +------+--+--------+--------+--------+--------+--------+--+
+            6    2     8        8        8        8        8     2
+ lanip:
+	 +------+
+	 |xxxxxx|
+	 +------+
+            6
+
+ * IPv6 address format
+    * prefix claim is for 10 years from now, in lieu of std update
+    * prefix is for recognition of 6bed4 addresses
+    * prefix is not routed
+    * general 6bed4 address is reachable for anyone
+    * direct 6bed4 address is at least reachable from the general 6bed4 address
+    * direct 6bed4 address may be local if ok by general 6bed4 address
+    * general and direct 6bed4 addresses need not be related
+    * if not local, direct 6bed4 address may be optimistically tried
+    * lanip part is usable for DHCPv6; one UDP port can serve 16382 peers
+    * link-local address for network is fe80:: with 1 or 2 levels visible
+    * support for multicast addresses is available
+    * warn about local addresses (holding a mac part)
+
+ * nat and firewall traversal
+    * assume udp-out is okay (new or reused mapping) (possibly remote-param'd)
+    * assume udp-reply is mapped back (possibly remote-parameterised)
+    * assume no inspection or change of udp contents
+
+ * security measures
+    * servers validate on direct 6bed4 address
+    * peers validate on general or, if not local, direct 6bed4 address
+
+ * optimistic peering
+    * general description
+    * default peering: neighbor discovery
+    * additional peering: e.g. TCP setup, or SIP/UDP transaction
+
+ * server requirements
+    * must validate incoming traffic: first matches actual
+    * if incoming messages are invalid, respond routeradv /114, retract wrong
+    * answer to routersol from any host, respond routeradv /114
+    * possibly reject traffic that does not have one "own" party
+    * must repeat nonces and timing for security
+    * receive traffic for /48 from native IPv6
+    * should forward to /48 if less announced and destination is not me
+
+ * peer requirements
+    * must validate incoming traffic: first or second matches actual
+    * if incoming messages are invalid, respond routeradv /114, retract wrong
+    * answer to routersol from any host, respond routeradv /114
+    * if incoming messages are invalid, respond routeradv
+    * initiate connections to a 6bed4 peer to their 6bed4 server
+    * must inivite peer 6bed4 address for direct access
+    * must upon matching accept, send directly to peer for some time
+    * must respond to neighborsol with neighboradv from direct peer
+    * may respond to other optimistic direct routing
+    * must ensure direct contact if peer manages to get in directly
+    * must repeat nonces and timing; should send nonces for security
+    * keep open connections to all 6bed4 servers in use (portfwd / ttl=3)
+
+ * profiles
+    * en-route 6bed4 server profile
+       - may hijack default tunnel server address
+       - usually under a locally routeable /64 prefix
+       - not recognisable as 6bed4 server; ok because no trapeziumshape
+    * aggregated 6bed4 server profile
+       - has IPv6 BGP announcements to match serviced IPv4 ranges
+       - receives IPv6 from native, relays to serviced IPv4 address
+    * on-server 6bed4 peer profile
+       - makes any server dual-stack
+       - requires BGP for /48, or forwarding aggregate, or 6bed4-only service
+
+ * reducing dependency on central server infra
+    * local/remote addressing: prefer native--native or else 6bed4--6bed4
+    * services that will retry could be rejected when done wrong
+    * services that refer to other services should make a clever choice
+
+ * implementation concerns
+    * existing neighbor caches may not be designed for high capacity
+    * impact list for tunnels
+
+ * iana aspects
+    * one /16 prefix for 6bed4 addresses
+    * offer public server ipv4 address
+

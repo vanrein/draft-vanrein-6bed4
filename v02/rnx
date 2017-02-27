@@ -1,0 +1,11 @@
+<reference anchor="IEEE-EUI64">
+<front>
+<title>Guidelines for 64-bit Global Identifier (EUI-64TM)</title>
+<author>
+<organization>IEEE</organization>
+</author>
+<!-- <date year="2011" /> -->
+</front>
+<!-- <seriesInfo name="IEEE Std" value="802.1Q" /> -->
+<format type='PDF' octets='124241' target='http://standards.ieee.org/develop/regauth/tut/eui64.pdf' />
+</reference>

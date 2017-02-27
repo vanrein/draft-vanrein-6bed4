@@ -1,0 +1,2099 @@
+%!PS-Adobe-3.0
+%%Title: draft-vanrein-6bed4-02pre.txt
+%%For: Rick van Rein
+%%Creator: a2ps version 4.14
+%%CreationDate: Fri Jul 19 12:36:35 2013
+%%BoundingBox: 24 24 571 818
+%%DocumentData: Clean7Bit
+%%Orientation: Portrait
+%%Pages: 18
+%%PageOrder: Ascend
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontType get 0 eq {
+    currentfont /FontMatrix get 3 get
+  }{
+    currentfont /FontMatrix get 3 get 1000 mul
+  } ifelse
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% composite fonts for ASCII-EUC mixed strings
+% Version 1.2 1/31/1990
+% Original Ken'ichi HANDA (handa@etl.go.jp)
+% Modified Norio Katayama (katayama@rd.nacsis.ac.jp),1998
+% Extend & Fix Koji Nakamaru (maru@on.cs.keio.ac.jp), 1999
+% Anyone can freely copy, modify, distribute this program.
+
+/copyfont {	% font-dic extra-entry-count  copyfont  font-dic
+	1 index maxlength add dict begin
+	{	1 index /FID ne 2 index /UniqueID ne and
+		{def} {pop pop} ifelse
+	} forall
+	currentdict
+	end
+} bind def
+
+/compositefont { % ASCIIFontName EUCFontName RomanScale RomanOffset Rot(T/F) compositefont font
+    /RomanRotation exch def
+    /RomanOffset exch def
+    /RomanScale exch def
+    userdict /fixeucfont_dict known not {
+	userdict begin
+	    /fixeucfont_dict 2 dict begin
+		/UpperByteEncoding [
+		    16#00 1 16#20 { pop 0 } for
+		    16#21 1 16#28 { 16#20 sub } for
+		    16#29 1 16#2F { pop 0 } for
+		    16#30 1 16#74 { 16#27 sub } for
+		    16#75 1 16#FF { pop 0 } for
+		] def
+	        /LowerByteEncoding [
+		    16#00 1 16#A0 { pop /.notdef } for
+		    16#A1 1 16#FE { 16#80 sub 16 2 string cvrs
+				    (cXX) dup 1 4 -1 roll
+				    putinterval cvn } for
+		    /.notdef
+		] def
+		currentdict
+	    end def
+	end
+    } if
+    findfont dup /FontType get 0 eq {
+	14 dict begin
+	    %
+	    % 7+8 bit EUC font
+	    %
+	    12 dict begin
+		/EUCFont exch def
+		/FontInfo (7+8 bit EUC font) readonly def
+		/PaintType 0 def
+		/FontType 0 def
+		/FontMatrix matrix def
+		% /FontName
+		/Encoding fixeucfont_dict /UpperByteEncoding get def
+		/FMapType 2 def
+		EUCFont /WMode known
+		{ EUCFont /WMode get /WMode exch def }
+		{ /WMode 0 def } ifelse
+		/FDepVector [
+		    EUCFont /FDepVector get 0 get
+		    [ 16#21 1 16#28 {} for 16#30 1 16#74 {} for ]
+		    {
+			13 dict begin
+			    /EUCFont EUCFont def
+			    /UpperByte exch 16#80 add def	
+			    % /FontName
+			    /FontInfo (EUC lower byte font) readonly def
+			    /PaintType 0 def
+			    /FontType 3 def
+			    /FontMatrix matrix def
+			    /FontBBox {0 0 0 0} def
+			    /Encoding
+				fixeucfont_dict /LowerByteEncoding get def
+			    % /UniqueID
+			    % /WMode
+			    /BuildChar {
+				gsave
+				exch dup /EUCFont get setfont
+				/UpperByte get
+				2 string
+				dup 0 4 -1 roll put
+				dup 1 4 -1 roll put
+				dup stringwidth setcharwidth
+				0 0 moveto show
+				grestore
+			    } bind def
+			    currentdict
+			end
+			/lowerbytefont exch definefont
+		    } forall
+		] def
+		currentdict
+	    end
+	    /eucfont exch definefont
+	    exch
+	    findfont 1 copyfont dup begin
+		RomanRotation {
+			/FontMatrix FontMatrix
+			[ 0 RomanScale neg RomanScale 0 RomanOffset neg 0 ]
+			matrix concatmatrix def
+		}{
+			/FontMatrix FontMatrix
+			[ RomanScale 0 0 RomanScale 0 RomanOffset ] matrix concatmatrix
+			def
+			/CDevProc
+			    {pop pop pop pop 0 exch -1000 exch 2 div 880} def
+		} ifelse
+	    end
+	    /asciifont exch definefont
+	    exch
+	    /FDepVector [ 4 2 roll ] def
+	    /FontType 0 def
+	    /WMode 0 def
+	    /FMapType 4 def
+	    /FontMatrix matrix def
+	    /Encoding [0 1] def
+	    /FontBBox {0 0 0 0} def
+%	    /FontHeight 1.0 def % XXXX
+	    /FontHeight RomanScale 1.0 ge { RomanScale }{ 1.0 } ifelse def
+	    /Descent -0.3 def   % XXXX
+	    currentdict
+	end
+	/tmpfont exch definefont
+	pop
+	/tmpfont findfont
+    }{
+	pop findfont 0 copyfont
+    } ifelse
+} def	
+
+/slantfont {	% FontName slant-degree  slantfont  font'
+    exch findfont 1 copyfont begin
+    [ 1 0 4 -1 roll 1 0 0 ] FontMatrix exch matrix concatmatrix
+    /FontMatrix exch def
+    currentdict
+    end
+} def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 842 def
+/sw 595 def
+/llx 24 def
+/urx 571 def
+/ury 818 def
+/lly 24 def
+/#copies 1 def
+/th 20.000000 def
+/fnfs 15 def
+/bfs 11.199836 def
+/cw 6.719901 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   747.029046 th add
+def
+/pmw 0 def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+] def
+/y [
+  pmh ph add 0 mul ph add
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1) 1
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+() N
+() N
+() N
+(Network Working Group                                        R. Van Rein) N
+(Internet-Draft                                         OpenFortress B.V.) N
+(Intended status: Standards Track                        January 16, 2013) N
+(Expires: July 20, 2013) N
+() N
+() N
+(              6bed4: Peer-to-Peer IPv6 on Any Internetwork) N
+(                       draft-vanrein-6bed4-02pre) N
+() N
+(Abstract) N
+() N
+(   The intention of 6bed4 is to support IPv6-only applications, even on) N
+(   IPv4-only networks.  A specific area of concern is that of peer-to-) N
+(   peer protocols such as SIP or document exchange during a chat) N
+(   session.  Such protocols are designed to run in any environment,) N
+(   which means that they cannot rely on IPv6 for themselves, or their) N
+(   peers.  The 6bed4 tunnel mechanism ensures that IPv6 can be assumed) N
+(   on all peers, without a need to configure it explicitly.) N
+() N
+(   The 6bed4 mechanism is meant as a fallback mechanism for IPv6) N
+(   connectivity on networks that do not support it natively, by running) N
+(   a tunnel over UDP and IPv4.  The IPv4 address is used to support) N
+(   traceability of the traffic originator, which means that no user) N
+(   account or other configuration is needed.) N
+() N
+(   The tunnel mechanism builds on existing IPv6 mechanisms; it employs) N
+(   Stateless Address Autoconfiguration [RFC4862] to setup an IPv6) N
+(   address on a 6bed4 Peer, and Neighbor Discovery [RFC4861] to find the) N
+(   most direct route to a remote 6bed4 Peer.) N
+() N
+(Status of This Memo) N
+() N
+(   This Internet-Draft is submitted in full conformance with the) N
+(   provisions of BCP 78 and BCP 79.) N
+() N
+(   Internet-Drafts are working documents of the Internet Engineering) N
+(   Task Force \(IETF\).  Note that other groups may also distribute) N
+(   working documents as Internet-Drafts.  The list of current Internet-) N
+(   Drafts is at http://datatracker.ietf.org/drafts/current/.) N
+() N
+(   Internet-Drafts are draft documents valid for a maximum of six months) N
+(   and may be updated, replaced, or obsoleted by other documents at any) N
+(   time.  It is inappropriate to use Internet-Drafts as reference) N
+(   material or to cite them other than as "work in progress.") N
+() N
+(   This Internet-Draft will expire on July 20, 2013.) N
+() N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 1]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 1/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (1/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2) 2
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(Copyright Notice) N
+() N
+(   Copyright \(c\) 2013 IETF Trust and the persons identified as the) N
+(   document authors.  All rights reserved.) N
+() N
+(   This document is subject to BCP 78 and the IETF Trust's Legal) N
+(   Provisions Relating to IETF Documents) N
+(   \(http://trustee.ietf.org/license-info\) in effect on the date of) N
+(   publication of this document.  Please review these documents) N
+(   carefully, as they describe your rights and restrictions with respect) N
+(   to this document.  Code Components extracted from this document must) N
+(   include Simplified BSD License text as described in Section 4.e of) N
+(   the Trust Legal Provisions and are provided without warranty as) N
+(   described in the Simplified BSD License.) N
+() N
+(Table of Contents) N
+() N
+(   1.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2) N
+(   2.  Wire Format of 6bed4 Frames . . . . . . . . . . . . . . . . .   3) N
+(   3.  Network Infrastructure  . . . . . . . . . . . . . . . . . . .   3) N
+(   4.  IPv6 Address Format . . . . . . . . . . . . . . . . . . . . .   5) N
+(   5.  NAT and Firewall Traversal  . . . . . . . . . . . . . . . . .   7) N
+(   6.  Filtering 6bed4 Traffic . . . . . . . . . . . . . . . . . . .   9) N
+(   7.  Optimistic Peering  . . . . . . . . . . . . . . . . . . . . .  10) N
+(     7.1.  General Framework for Peering Setup . . . . . . . . . . .  11) N
+(     7.2.  Neighbor-based Peering Setup  . . . . . . . . . . . . . .  11) N
+(     7.3.  Router-based Peering Setup  . . . . . . . . . . . . . . .  12) N
+(     7.4.  TCP-based Peering Setup . . . . . . . . . . . . . . . . .  12) N
+(     7.5.  SIP-supported Peering Setup . . . . . . . . . . . . . . .  13) N
+(   8.  Requirements and Profiles . . . . . . . . . . . . . . . . . .  13) N
+(     8.1.  Requirements for 6bed4 Servers  . . . . . . . . . . . . .  14) N
+(     8.2.  Requirements for 6bed4 Peers  . . . . . . . . . . . . . .  15) N
+(     8.3.  En-route 6bed4 Service Profile  . . . . . . . . . . . . .  16) N
+(     8.4.  Aggregated 6bed4 Service Profile  . . . . . . . . . . . .  16) N
+(     8.5.  On-server 6bed4 Service Profile . . . . . . . . . . . . .  16) N
+(     8.6.  LAN-serving 6bed4 Service Profile . . . . . . . . . . . .  17) N
+(   9.  Reducing Depenedency on Server Infrastructure . . . . . . . .  17) N
+(   10. Implementation Concerns . . . . . . . . . . . . . . . . . . .  17) N
+(   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18) N
+(   12. Security Considerations . . . . . . . . . . . . . . . . . . .  18) N
+(   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18) N
+(   Appendix A.  TODO:back matter . . . . . . . . . . . . . . . . . .  18) N
+(   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18) N
+() N
+(1.  Terminology) N
+() N
+(   6bed4 address \(source, destination\) \(general, direct\)) N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 2]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 2/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (2/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 3
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   6bed4 peer) N
+() N
+(   native address) N
+() N
+(   public address) N
+() N
+(   internal address) N
+() N
+(   UDP/IPv4 stream) N
+() N
+(   6bed4 connection \(direct ~, general ~\) basically an UDP/IPv4 stream) N
+(   between two 6bed4 addresses) N
+() N
+(   endpoint-dependent mapping) N
+() N
+(2.  Wire Format of 6bed4 Frames) N
+() N
+(   A 6bed4 frame is embedded into UDP and IPv4 and sent in that form) N
+(   over the Internet.  The origin IPv4 address and source UDP port) N
+(   together are referred to as the frame's Source 6bed4 Address; the) N
+(   destination IPv4 address and destination UDP port together are) N
+(   referred to as the frame's Destination 6bed4 Address.) N
+() N
+(   The embedded contents of a 6bed4 frame always represents an IPv6) N
+(   frame.  The source IPv6 address encodes the origin 6bed4 address, and) N
+(   the destination IPv6 address encodes the destination 6bed4 address.) N
+(   In fact, there are two 6bed4 addresses over which the destination) N
+(   could be reached, directly or through a tunnel server.  Both are) N
+(   contained as part of the IPv6 addresses.) N
+() N
+(   Since 6bed4 embedding supports general IPv6 traffic, there is a well-) N
+(   defined form for carrying around ICMPv6 messages, specifically) N
+(   including Neighbor Discovery messages.  These are actively used to) N
+(   negotiate with 6bed4 peers.  Router Solicitation and Advertisement is) N
+(   used to determine a public address as seen by the remote peer;) N
+(   Neighbor Solicitation and Advertisement are used to determine if a) N
+(   remote 6bed4 peer can be reached at the direct 6bed4 address.) N
+() N
+(   Router Advertisements in 6bed4 frames are always /114 prefixes.  This) N
+(   leaves 14 bits to distinguish hosts under the same prefix, quite) N
+(   possibly managed through static assignment or DHCPv6.) N
+() N
+(3.  Network Infrastructure) N
+() N
+(   The 6bed4 infrastructure does not refer to its components as tunnel) N
+(   clients and tunnel servers, but rather as 6bed4 peers and 6bed4) N
+(   servers.  This reflects the intent of making the endpoints, or peers,) N
+(   make direct UDP/IPv4 streams over which to exchange IPv6 traffic.) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 3]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 3/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (3/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (4) 4
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   A 6bed4 server has as its main purpose to provide information about) N
+(   the public 6bed4 address of a peer, and to serve as a fallback) N
+(   transit for those network setups in which direct UDP/IPv4 streams are) N
+(   not feasible.  Finally, the 6bed4 server is needed to connect a host) N
+(   that can only do 6bed4 to one that can only do native IPv6;) N
+(   precautions to avoid that situation follow.) N
+() N
+(   To be available to the outside world on a 6bed4 address, a 6bed4 peer) N
+(   sends a Router Solicitation to a 6bed4 server, and receives a Router) N
+(   Advertisement with a /114 prefix in return.  As shown in) N
+(   Section Section 2, the returned prefix includes the public 6bed4) N
+(   address that the peer can use, and enough to setup a local IPv6) N
+(   address or, if so desired, a series of IPv6 addresses to assign) N
+(   locally.  It is then the local peer's task to keep open the UDP/IPv4) N
+(   stream to the 6bed4 server, so as to ensure that the IPv6 address) N
+(   remains constant.  If it were to change, then the server would) N
+(   respond to sent traffic with a new Router Advertisement, offering a) N
+(   new /114 prefix and retracting the previous one.) N
+() N
+(   Before contacting a remote 6bed4 peer, it is advisable to send a) N
+(   Router Solicitation to the general 6bed4 address found in the remote) N
+(   IPv6 address.  This results in an alternate 6bed4 address to use) N
+(   locally for that contact attempt, avoiding trapezium-shaped traffic) N
+(   between peers.  This is guaranteed to always work.  To further) N
+(   optimise traffic, it is possible to send a Router Advertisement to) N
+(   the direct 6bed4 address contained in the remote IPv6 address; this) N
+(   may work and entirely remove the dependency on a tunnel server.) N
+() N
+(   At any time before or during communication with a peer through a) N
+(   tunnel server, it is possible to attempt direct contact by sending a) N
+(   Neighbor Solicitation to the peer's direct 6bed4 address, and) N
+(   observing if it is matched by a Neighbor Advertisement returned from) N
+(   that direct 6bed4 address.) N
+() N
+(   When such direct requests lead to matching direct responses, then it) N
+(   is safe to assume that direct traffic between the peers is possible) N
+(   for some time following.  This is because UDP/IPv4 has been passed,) N
+(   and the fact that it contained ICMPv6 cannot be inferred by the) N
+(   intermediate NAT routers or firewalls because the UDP format does not) N
+(   tag its contents.) N
+() N
+(   In all this, the UDP/IPv4 streams between peer and server, as well as) N
+(   directly between peers, is always a point-to-point UDP/IPv4 stream) N
+(   whose 6bed4 address will not be assumed to apply for other UDP/IPv4) N
+(   streams.  This is vital, as it evades the trap of making inductive) N
+(   assumptions about the behaviour of NAT or firewalls.) N
+(   Section Section 5 for details of the deductive approach of 6bed4 when) N
+(   it comes to NAT and firewall behaviour.) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 4]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 4/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (4/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5) 5
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   It is common for IPv6 hosts to have multiple IPv6 addresses, and so) N
+(   the question which local and remote addresses to use.  This has been) N
+(   answered in TODO.  In relation to 6bed4, it is important that native-) N
+(   to-native traffic precedes 6bed4-to-6bed4, but also that 6bed4-6bed4) N
+(   is preferred over either native-6bed4 or 6bed4-native, on account of) N
+(   its potential of direct routing and independency of a shared) N
+(   resource, the 6bed4 server.) N
+() N
+(   In addition to this, it is worth remarking that higher-layer) N
+(   applications could also make good use of 6bed4; for instance, a SIP) N
+(   server could observe a remote peer's 6bed4 address and offer media) N
+(   exchange on a 6bed4 address instead of a native IPv6 address, once) N
+(   more in an attempt to offload shared 6bed4 servers.) N
+() N
+(4.  IPv6 Address Format) N
+() N
+(   The general format of an IPv6 address that can be embedded as 6bed4) N
+(   is as follows:) N
+() N
+(   The IPv6 address for 6bed4:) N
+() N
+(    0       16                      64                      114) N
+(   +-------+-------+-------+-------+-------+-------+-------+-------+) N
+(   | TBD1  | general 6bed4 address | direct 6bed4 address   | lanip|) N
+(   +-------+-------+-------+-------+-------+-------+-------+-------+) N
+(   <--------------------- /114 prefix --------------------->) N
+() N
+() N
+(   The well-known TBD1::/16 prefix is important; it enables software to) N
+(   recognise this format in IPv6 addresses, and realise that traffic can) N
+(   be sent directly to a 6bed4 peer.  This format translates a single) N
+(   IPv4 address to a /48 prefix, which is the longest considered) N
+(   routeable; an IPv4 subnet such as a /24 or /16 translates to a) N
+(   shorter prefix, in these cases /40 and /32.  These routeable prefixes) N
+(   mean that there is no requirement for a /16 prefix service to) N
+(   facilitate 6bed4 on an unpredictable return path; instead, the) N
+(   infrastructure for routing IPv4 prefixes can be mirrorred in the) N
+(   6bed4 routing infrastructure.  Prefixes of 6bed4 addresses MUST be) N
+(   published in BGP by only those parties who are permitted to publish) N
+(   the corresponding IPv4 prefix in BGP.) N
+() N
+(   The prefix TBD1::/16 is only reserved for a period of ten years,) N
+(   starting at the date of publication of this specification.) N
+(   Implementations that are aware of time MUST NOT implement 6bed4 after) N
+(   the final date; an extension of the final date is only possible) N
+(   through IETF consensus.  This leaves five years for new applications) N
+(   to roll out IPv6 applications based on 6bed4, and another five years) N
+(   for the use of 6bed4 to cease to exist and native IPv6 to replace it.) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 5]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 5/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (5/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (6) 6
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   Effectively, 6bed4 supports the assumption of IPv6 available) N
+(   anywhere, which should help the shift from IPv4 to IPV6.) N
+() N
+(   The general 6bed4 address MUST be generally reachable, both over) N
+(   6bed4 and native IPv6.  This means that there MUST be a 6bed4 service) N
+(   running at the contained IPv4 address and UDP port; and also, that a) N
+(   BGP path MUST exist that routes native IPv6 traffic to a host that) N
+(   can forward IPv6 frames after embedding them in 6bed4 frames.  This) N
+(   facility is generally referred to as a 6bed4 server.) N
+() N
+(   The direct 6bed4 address MUST be reachable for 6bed4 frames from the) N
+(   general 6bed4 address, that is, from the 6bed4 server.  It represents) N
+(   the 6bed4 peer or, if the lanip part is used to further split a local) N
+(   network, then a local router offering 6bed4 service on the local) N
+(   network.  Note that the direct 6bed4 address MAY be reachable for) N
+(   other hosts as well, using 6bed4 frames; this is generally intended) N
+(   as it offloads the 6bed4 server and leads to direct UDP/IPv4 traffic) N
+(   between the 6bed4 peers.) N
+() N
+(   The general 6bed4 address:) N
+() N
+(   +--------+--------+--------+--------+--------+--------+) N
+(   | IPv4.H | IPv4.h | IPv4.l | IPv4.L | UDP.H  | UDP.L  |) N
+(   +--------+--------+--------+--------+--------+--------+) N
+(       8        8        8        8        8        8) N
+() N
+() N
+(   The direct 6bed4 address:) N
+() N
+(   +------+--+--------+--------+--------+--------+--------+--+) N
+(   |IPv4.H|00| IPv4.h | IPv4.l | IPv4.L | UDP.H  | UDP.L  |HH|) N
+(   +------+--+--------+--------+--------+--------+--------+--+) N
+(      6    2     8        8        8        8        8     2) N
+() N
+() N
+(   The general 6bed4 address consists of a sequence of an IPv4 address) N
+(   and UDP port, both in network byte order.  The direct 6bed4 address) N
+(   is formatted slightly different in the IPv6 address, as the lower) N
+(   half of an IPv6 address must follow the EUI-64 format; its first byte) N
+(   has the lower two bits set to zero.  The replaced address bits are) N
+(   attached after the UDP port without changing their order.  As a) N
+(   result, the remaining size for the lanip field is 14 bits.) N
+() N
+(   Note that it would be possible to assign meaning to non-zero values) N
+(   of the EUI-64 flag bits, but this specification does not detail how.) N
+(   It could however be useful in an extension to 6bed4; multicast media) N
+(   streams are more likely with the greater address space of IPv6, and) N
+(   6bed4 could facilitate it because it makes IPv6 possible everywhere;) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 6]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 6/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (6/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7) 7
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   and it could also be useful to support globally unique EUI-64) N
+(   identifiers when the general 6bed4 address can address hosts locally.) N
+() N
+(   Mindful of the current specification and these possible extensions,) N
+(   this specification states that the two flag bits SHOULD be set to 0.) N
+(   The lower half of the IPv6 address MUST NOT be interpreted to contain) N
+(   a direct 6bed4 address if the local/unique flag is set; in that case,) N
+(   it MAY be interpreted as a modified EUI-64 address and potentially) N
+(   used for local routing if the upper half of the IPv6 address is in) N
+(   local use.  The unicast/multicast flag MAY be ignored, but is likely) N
+(   to be refined if this specification is enhanced with multicast) N
+(   capabilities.) N
+() N
+(   TODO: LAN-only or Carrier Grade NAT IPv4 addresses?  Never as general) N
+(   address, but how about direct 6bed4 address?  Introduce INVALID) N
+(   direct address, also for those with globally-unique bit in the OUI.) N
+(   For LAN-only and CGN IPv4 addresses, require the same /64 prefix to) N
+(   support switching off INVALID.  Hmm...) N
+() N
+(   In addition to the globally routeable IPv6 address format, there is a) N
+(   format for link-local addresses, which may be used for direct) N
+(   communication between 6bed4 peers or between a 6bed4 peer and a 6bed4) N
+(   server.  TODO.) N
+() N
+(5.  NAT and Firewall Traversal) N
+() N
+(   There is a wide variety of NAT router implementations, each with) N
+(   subtly different characteristics.  A similar thing applies to) N
+(   firewalls.  This means that any approach to peering through NAT and) N
+(   firewalls that is to work in general must employ deductive reasoning-) N
+(   from-facts, and not induce information from an incomplete survey of) N
+(   NAT routers and firewalls.  Specifically, STUN [TODO] used to make) N
+(   such inductions which were later recalled [TODO].  An IPv6 peering) N
+(   approach based on it [TODO] has indeed shown to not work in general) N
+(   [TODO].) N
+() N
+(   This specification assumes that outgoing UDP is supported.  The only) N
+(   imagined exception is due to manual override, where an admin prefers) N
+(   to control UDP based on port numbers.  It is not possible however to) N
+(   filter UDP traffic in general, because its lack of tagging of) N
+(   contents leaves no information but a mere port number to filter on.) N
+(   As a result, an entire NAT router or firewall is limited to one) N
+(   default behaviour for all outgoing UDP traffic.  Otherwise, general) N
+(   UDP would not work.) N
+() N
+(   When sending UDP out through a NAT router, it will usually substitute) N
+(   the source IPv4 address and UDP port with an external IPv4 address) N
+(   and UDP port.  For UDP to behave normally, such substitutions must be) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 7]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 7/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (7/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (8) 8
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   the same when future frames are sent over the same UDP stream, so a) N
+(   mapping between internal and external IPv4 address and UDP port is) N
+(   assumed.  The NAT router can make a selection from the source and) N
+(   destination IPv4 addresses and UDP ports to determine what mapping to) N
+(   apply, but as long as all these values match, the same UDP/IPv4) N
+(   stream is recognised and the same mapping must be applied.) N
+() N
+(   Firewalls have a similar mapping, albeit not for substituting an) N
+(   address and port, but to recognise if traffic has been sent out over) N
+(   a UDP/IPv4 stream.  Other than this difference, it generally behaves) N
+(   under the same constraints as a mapping in a NAT router.) N
+() N
+(   UDP has no formal end marker for a UDP/IPv4 stream, so the only thing) N
+(   that a router can do is guess when a stream has ended.  It is assumed) N
+(   by this specification that a mapping is kept active for a minimum) N
+(   time, and revived at least when traffic is sent out along the stream,) N
+(   as that is the only reasonable thing an implementation can do without) N
+(   making UDP unreliable.  This means that a keepalive mechanism is) N
+(   needed in a number of places, and the timer triggering that mechanism) N
+(   must be a setting that the end user can influence.  Experiments) N
+(   [TODO] have shown that a default setting of 30 seconds is quite) N
+(   likely to work.) N
+() N
+(   UDP in general is a bidirectional protocol, so when outbound traffic) N
+(   is accepted over an UDP/IPv4 stream, then reply traffic within that) N
+(   stream must also be accepted.  Otherwise, a firewall or NAT router) N
+(   would break the UDP protocol.  Note once again that there is no) N
+(   tagging of content in UDP, so there can only be one default policy.) N
+(   There is only one way that a NAT router can redirect such traffic) N
+(   internally, and that is by applying the mapping for the UDP/IPv4) N
+(   stream in reverse.  This sends the reply traffic back to the internal) N
+(   host that initiated the outbound side of the UDP/IPv4 stream.) N
+() N
+(   Finally, firewalls and NAT routers are assumed to not inspect the) N
+(   contents of an UDP/IPv4 stream.  This is a fair assumption because of) N
+(   the lacking content tagging in UDP.  Network components that alter) N
+(   the contents of UDP frames have been reported [TODO] but are) N
+(   downright broken.  They may need to be replaced before 6bed4 can) N
+(   function; unlike Teredo, 6bed4 will not reduce the risk of running) N
+(   into such bugs by obfuscation of addresses and ports contained in) N
+(   6bed4 frames.) N
+() N
+(   Note specifically, that 6bed4 makes no assumption about sharing the) N
+(   same mapping for different UDP/IPv4 streams; an public IPv4 address) N
+(   and UDP port may be the same for two remote peers, or they may) N
+(   differ.  As far as 6bed4 concerns, they are separately administered) N
+(   mappings.) N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 8]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 8/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (8/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (9) 9
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   Also note that 6bed4 is not aware of any classification of NAT) N
+(   routers or firewalls.  Instead, it will simply try if IPv6 traffic) N
+(   between peers is possible by sending a frame directly to a peer and) N
+(   matching it with a return frame.  Since these are carried as part of) N
+(   a UDP/IPv4 stream with no content tagging, a NAT router cannot treat) N
+(   this test exchange any differently from "real" data, and so it is) N
+(   possible to exchange traffic directly for as long as the UDP/IPv4) N
+(   stream is considered to be mapped.  This may be for a limited time,) N
+(   but that time can be extended through keepalive messages if so) N
+(   desired.) N
+() N
+(   A concrete example where public addresses differ, is if the same) N
+(   internal IPv4 address and UDP port is used for a UDP/IPv4 stream to a) N
+(   6bed4 server and a 6bed4 peer, while it is behind a NAT router that) N
+(   applies endpoint-dependent mapping to UDP/IPv4 streams.  This would) N
+(   mean that it is not possible to make a direct connection between such) N
+(   peers.  This does become possible when an initial Router Solicitation) N
+(   is sent directly to the remote 6bed4 peer, and when a reply is) N
+(   received directly.  This procedure is optional in a 6bed4) N
+(   implementation.) N
+() N
+(6.  Filtering 6bed4 Traffic) N
+() N
+(   TODO: Check if trapezium-routing is accepted.) N
+() N
+(   Any tunnel should guard against being abused to claims to addresses) N
+(   "inside" the tunnel based on clients "outside" the tunnel that should) N
+(   not be able to make such claims.  In the case of 6bed4, this means) N
+(   that the 6bed4 address from which a 6bed4 frame arrives must match) N
+(   with the IPv6 sender address.) N
+() N
+(   Both 6bed4 servers and 6bed4 peers MUST silently discard any) N
+(   6bed4-embedded frame that is not an proper IPv6 message; example) N
+(   conditions to implement that would be:) N
+() N
+(   o  the embedded frame length is less than that of an IPv6 header) N
+() N
+(   o  the embedded frame does not start with nibble 6) N
+() N
+(   o  the embedded frame length differs from the total IPv6 frame length) N
+() N
+(   o  there are checksum errors in TCP, ICMPv6 or UDP headers) N
+() N
+(   In case of a 6bed4 server, this means that the direct 6bed4 address) N
+(   contained in the IPv6 address MUST match the 6bed4 address from which) N
+(   the 6bed4 frame arrived.  In case of a 6bed4 peer, this means that) N
+(   either the general or the direct 6bed4 address contained in the IPv6) N
+(   address MUST match the 6bed4 address from which the 6bed4 frame) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                 [Page 9]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 9/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (9/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (10) 10
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   arrived.  In addition, a 6bed4 server MUST also validate its own IPv4) N
+(   address \(or subnet\) and UDP port against the IPv6 address claimed, so) N
+(   as to assure that it matches any return traffic over native IPv6, as) N
+(   a result of its BGP announcement.) N
+() N
+(   In cases where the lower half of the IPv6 address indicates a) N
+(   globally unique lower half, the direct 6bed4 address cannot be) N
+(   retrieved from the IPv6 address, and so it is not possible to make) N
+(   the aforementioned filtering matches.  A remote peer could still) N
+(   accept a 6bed4 frame on account of the general 6bed4 address in the) N
+(   IPv6 address, but it MUST NOT try to read a direct 6bed4 address from) N
+(   the IPv6 address.  Obviously, in situations like these the 6bed4) N
+(   server would follow other rules because it implemented a different) N
+(   sort of mapping.) N
+() N
+(   When a filter rejects a 6bed4 frame on account of a mismatch between) N
+(   the 6bed4 sender address and the suggested IPv6 address, it should) N
+(   respond with a Router Advertisement that retracts the /114 prefix) N
+(   used in the IPv6 address, and offer a new /114 prefix that would have) N
+(   matched to replace it.) N
+() N
+(   A 6bed4 server MAY apply additional filtering to limit its use to a) N
+(   particular subset of 6bed4 peers; for instance, the users of an ISP) N
+(   or a commercial 6bed4 service.  To this end, it would ensure that) N
+(   6bed4 frames are passed either from or to a direct 6bed4 address that) N
+(   is accepted.  This MUST NOT be done on a 6bed4 router that is) N
+(   available on the well-known 6bed4 addres range 145.136.0/24 because) N
+(   that MUST remain open to anyone.) N
+() N
+(   The only messages exempted from all aforementioned filtering are) N
+(   Router Solicitation frames targeting a link-local IPv6 address, and) N
+(   having their IPv6 Hop Limit set to 255.  Those messages receive a) N
+(   Router Advertisement frame in reply, containing the /114 prefix that) N
+(   matches the 6bed4 address of the originator of the solicitation.) N
+(   Specifically note that even a commercially exploited 6bed4 server) N
+(   MUST welcome Router Solicitation from prospective peers that intend) N
+(   to avoid trapezium-shaped routing.) N
+() N
+(7.  Optimistic Peering) N
+() N
+(   Direct UDP/IPv4 streams between 6bed4 peers is an explicit goal of) N
+(   the 6bed4 mechanism; this is achieved by simply trying an exchange) N
+(   over UDP/IPv4 and reliance on the non-interpretation of UDP to infer) N
+(   that the entire UDP/IPv4 stream must be possible if a single exchange) N
+(   works bidirectionally.) N
+() N
+(   It is vitally important that the traffic follows the same path in) N
+(   both directions.  This is because it is only safe to assume that) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 10]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 10/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (10/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11) 11
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   outgoing traffic in a UDP/IPv4 stream keeps NAT router and firewalls) N
+(   open for return traffic.  Specifically, these network components need) N
+(   to see the same UDP ports and IPv4 addresses for the traffic in both) N
+(   directions, albeit with their source and destination roles exchanged.) N
+(   To ensure this, a 6bed4 peer that receives direct traffic from a) N
+(   remote peer that it would address through a 6bed4 server MUST start) N
+(   one of the following methods to setup direct peering.) N
+() N
+(   The one thing left to specify is how peering is initiated.  This is) N
+(   done by one of the following methods to setup direct peering, applied) N
+(   optimistically.  This can basically be done at any time deemed) N
+(   fitting, but it is suggested to employ some form of rate limiting for) N
+(   optimistic peering attempts.  A few useful places to do this would be) N
+(   to send a Router Advertisement to a direct 6bed4 address before) N
+(   sending it to its general 6bed4 address; or to send Neighbor) N
+(   Discovery sometime during the normal exchange; or to do it during the) N
+(   setup of a TCP/IPv6 stream.) N
+() N
+(   The following sections introduce a general framework for setting up) N
+(   direct peering.  It continues with a few concrete examples, some of) N
+(   which must be implemented with 6bed4.  There are certainly) N
+(   opportunities for other specific implementations of the general) N
+(   optimistic mechanism.) N
+() N
+(7.1.  General Framework for Peering Setup) N
+() N
+(   The generic framework for peering setup assumes that a direct message) N
+(   may be lost.  To avoid the need for resending queues, it is therefore) N
+(   assumed that these messages are expandable.  They must either be re-) N
+(   sent by higher protocol layers, or they must be generated for the) N
+(   specific purpose of trying direct connectivity.) N
+() N
+(   Another aspect of the generic framework is that it must be possible) N
+(   to relate an incoming direct reply to an outgoing direct request, and) N
+(   only a direct outgoing request.  This can be established with a nonce) N
+(   if a frame is generated for the purposes of 6bed4 peer detection; or) N
+(   if a higher protocol layer generates the message, then the time) N
+(   between the first send and a later re-send is the window during which) N
+(   the direct response is considered a reliable sign of bidirectional) N
+(   traffic.) N
+() N
+(7.2.  Neighbor-based Peering Setup) N
+() N
+(   One mechanism that MUST be implemented in all 6bed4 peers is that of) N
+(   peering setup through Neighbor Discovery.  This comes down to sending) N
+(   a Neighbor Solictation over 6bed4, using the IPv6 address of the) N
+(   remote peer as the requested address, and receiving a reply in the) N
+(   form of a Neighbor Advertisement.  In short, this is reachability) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 11]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 11/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (11/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (12) 12
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   detection.  The usual ICMPv6 requirement of a Hop Limit equal to 255) N
+(   applies here, and is not invalidated by the underlying UDP/IPv4) N
+(   transport.) N
+() N
+(   In order to ensure that a response is in reply to a request, as well) N
+(   as to thwart attemts to overtake traffic, a nonce following [TODO]) N
+(   MUST be sent as part of the Neighbor Solicitation.  A 6bed4 peer MUST) N
+(   respond to Neighbor Solicitation with Hop Limit 255 and its own) N
+(   address information as destination with a Neighbor Advertisement with) N
+(   Hop Limit 255, and it MUST include the nonce it found in the Neighbor) N
+(   Solicitation, if any.) N
+() N
+(   A 6bed4 peer wanting to setup direct communication may use this) N
+(   mechanism at any time; it is safe because it does not interfere with) N
+(   the actual data stream between the peers.  Neighbor Discovery SHOULD) N
+(   NOT be sent to the 6bed4 server, and it certainly MUST NOT include a) N
+(   nonce that was also used when communicating with a 6bed4 peer.) N
+() N
+(7.3.  Router-based Peering Setup) N
+() N
+(   Another mechanism that SHOULD be implemented in 6bed4 peers, and that) N
+(   MUST be implemented in 6bed4 servers, is responding to Router) N
+(   Discovery messages with the Hop Limit set to 255.  The response) N
+(   should be composed of the /64 prefix that applies to the 6bed4 server) N
+(   in use, and the lower half should be composed from the 6bed4 address) N
+(   over which the request was received.  If a nonce is included, it MUST) N
+(   be handled as for neighbor discovery.  A 6bed4 peer MUST include a) N
+(   nonce if it sends out a Router Discovery message.) N
+() N
+(7.4.  TCP-based Peering Setup) N
+() N
+(   This mechanism MAY be incorporated into 6bed4 implementations that) N
+(   run TCP over 6bed4.  It piggy-backs on the SYN and ACK flags) N
+(   exchanged while setting up a TCP connection to a remote 6bed4 peer,) N
+(   and introduces peering optimistically and, quite possibly, without) N
+(   any explicit messaging for setting it up.) N
+() N
+(   TCP-based peering is based on the SYN flag sent initially by a new) N
+(   TCP connection being setup, and the ACK flag sent to acknowledge it.) N
+(   Furthermore, it assumes that the TCP stack wil resend a failed first) N
+(   SYN attempt.) N
+() N
+(   The first SYN sent to a remote 6bed4 peer would be sent to the direct) N
+(   6bed4 address of the remote peer; if it reports back with the ACK) N
+(   flag set, then a direct connection was clearly possible.  If this) N
+(   response does not arrive before the TCP-stack re-sends the SYN fame,) N
+(   then this and further attempts are sent to the general 6bed4 address,) N
+(   until further inspiration triggers another attempt at direct peering.) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 12]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 12/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (12/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (13) 13
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   The endpoint information in TCP as well as window offsets are used to) N
+(   recognise the SYN attempt, and later pairing the ACK to it.  This) N
+(   means that the conditions are available for certainty that a direct) N
+(   attempt is paired with a direct response.) N
+() N
+(   Note that this mechanism works in both directions; as the passive) N
+(   side responds to a SYN with ACK, it usually sends its own SYN flag in) N
+(   hope of an ACK back from the active side.  This second exchange can) N
+(   follow the same rules to detect bidirectional connectivity from the) N
+(   other side.  Sending that first ACK along with the second SYN also) N
+(   means that a first attempt is made through direct peering.) N
+() N
+(   This facility is useful for 6bed4-based server addresses; given that) N
+(   the 6bed4 address can be approached directly thanks to a public IPv4) N
+(   address or port forwarding, it is then possible for any remote 6bed4) N
+(   peer to connect directly to the 6bed4 address of the host, thus) N
+(   enabling IPv6 addressing over IPv4 routing paths.) N
+() N
+(7.5.  SIP-supported Peering Setup) N
+() N
+(   Another example of optimistic peering that can be advantageous for a) N
+(   specific application is SIP.  A SIP exchange consists of a request) N
+(   and one or more responses.  The application software is well aware of) N
+(   the distinction between those, and can prove useful to facilitate) N
+(   6bed4 peering if it integrates the network layers.) N
+() N
+(   SIP messages, when sent over UDP, are prone to resends if a response) N
+(   is not received for some time.  As a result, it is possible to first) N
+(   attempt sending to the remote peer's direct 6bed4 address, and send) N
+(   later retries to the general 6bed4 address.  As with TCP, it is) N
+(   possible to treat as proof of direct peering any incoming direct) N
+(   responses between the intial request and its re-sends through the) N
+(   general 6bed4 address.) N
+() N
+(   The link between a SIP request and its response is easily made with) N
+(   the identifying parts of the message; these are embedded in text and) N
+(   would thus rely on application integration with 6bed4.  The parts are) N
+(   contained in the Call-ID: header, From: tag and optionally the To:) N
+(   tag.  In addition, the top Via: header contains a branch parameter) N
+(   that identifies the exchange.  TODO:via-only?) N
+() N
+(8.  Requirements and Profiles) N
+() N
+(   This section introduces a number of descriptions of nodes involved) N
+(   with 6bed4.  The minimum requirements for 6bed4 servers and 6bed4) N
+(   peers are described, as well as a number of specific profiles that) N
+(   demonstrate how 6bed4 can be employed flexibly.) N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 13]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 13/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (13/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (14) 14
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(8.1.  Requirements for 6bed4 Servers) N
+() N
+(   TODO: RouterAdv -- always a 6bed4 prefix?  If not, 6bed4 peers cannot) N
+(   assume that peering will work.) N
+() N
+(   A 6bed4 server MUST filter incoming 6bed4 frames as specified in) N
+(   Section Section 6.) N
+() N
+(   A 6bed4 server MUST respond to well-formed Router Solicitations from) N
+(   any 6bed4 peer, and to invalid incoming 6bed4 frames from any source) N
+(   with a Router Advertisement, by advertising the /114 prefix that) N
+(   starts with the well-known prefix TBD1::/16, followed by its own) N
+(   6bed4 address as the general 6bed4 address, and the requesting 6bed4) N
+(   address as the direct 6bed4 address.  When responding to invalid) N
+(   incoming traffic, it MUST also retract the /114 prefix that matches) N
+(   the origin address in the incoming 6bed4 frame.) N
+() N
+(   A 6bed4 server MUST be published in BGP with at least the 6bed4) N
+(   address that it assigns in Router Advertisements as the general 6bed4) N
+(   address, and MAY be published in BGP with a larger prefix.  The 6bed4) N
+(   server MUST receive all native IPv6 traffic sent to this published) N
+(   prefix.) N
+() N
+(   A 6bed4 server SHOULD forward native IPv6 frames to 6bed4 addresses) N
+(   after embedding them in a 6bed4 frame; the destination 6bed4 address) N
+(   is the direct 6bed4 address if the general 6bed4 address matches the) N
+(   server, or otherwise the destination 6bed4 address is the general) N
+(   6bed4 address.  Not doing this in all situations is a conscious) N
+(   limitation of the service, possibly for commercial reasons.  If the) N
+(   6bed4 server runs on the well-known IPv4 address 145.136.0.1 it MUST) N
+(   forward such traffic.) N
+() N
+(   A 6bed4 server SHOULD forward 6bed4 frames to native IPv6 addresses) N
+(   after unpacking the 6bed4 frames.  Not doing this in all situations) N
+(   is a conscious limitation of the service, possibly for commercial) N
+(   reasons.  If the 6bed4 server runs on the well-known IPv4 address) N
+(   145.136.0.1 it MUST forward such traffic.) N
+() N
+(   A 6bed4 server SHOULD forward 6bed4 frames to 6bed4 addresses by) N
+(   relaying them to the general 6bed4 address contained in the target) N
+(   IPv6 address; the destination 6bed4 address is the direct 6bed4) N
+(   address.  Not doing this in all situations is a conscious limitation) N
+(   of the service, possibly for commercial reasons.  If the 6bed4 server) N
+(   runs on the well-known IPv4 address 145.136.0.1 it MUST forward such) N
+(   traffic.) N
+() N
+() N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 14]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 14/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (14/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (15) 15
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   When responding to Neighbor Solicitation or Router Solicitation, a) N
+(   6bed4 server MUST copy any nonce and timing information from the) N
+(   request into the response.) N
+() N
+(8.2.  Requirements for 6bed4 Peers) N
+() N
+(   A 6bed4 peer MUST filter incoming 6bed4 frames as specified in) N
+(   Section Section 6.) N
+() N
+(   A 6bed4 peer SHOULD respond to well-formed Router Solicitations from) N
+(   any 6bed4 peer, and to invalid incoming 6bed4 frames from any source) N
+(   with a Router Advertisement, by advertising the /114 prefix that) N
+(   starts with the well-known prefix TBD1::/16, followed by its own) N
+(   6bed4 address as the general 6bed4 address, and the requesting 6bed4) N
+(   address as the direct 6bed4 address.  When responding to invalid) N
+(   incoming traffic, it MUST also retract the /114 prefix that matches) N
+(   the origin address in the incoming 6bed4 frame.) N
+() N
+(   TODO: MAY send through 6bed4 server as a default route) N
+() N
+(   When setting up a 6bed4 connection to a remote 6bed4 address, a 6bed4) N
+(   peer SHOULD prefer an address for the local side of the 6bed4) N
+(   connection that starts with the same /64 prefix as the remote peer's.) N
+(   If no such address is available locally, it may be acquired by) N
+(   sending a Router Solicitation to the remote peer's direct 6bed4) N
+(   address, and it can certainly be acquired by sending a Router) N
+(   Solicitation to the remote peer's general 6bed4 address.  These) N
+(   mechanisms are recommended until the local 6bed4 address is not) N
+(   bound.) N
+() N
+(   A 6bed4 peer MUST respond to received Neighbor Solicitation messages) N
+(   with Neighbor Discovery messages, to implement Optimistic Peering as) N
+(   specified in Section Section 7.1.  It MAY also implement other) N
+(   mechanisms for Optimistic Peering specified in that section.) N
+() N
+(   When communicating with a 6bed4 connection, a 6bed4 peer SHOULD) N
+(   attempt to setup a direct 6bed4 connection according to the) N
+(   Optimistic Peering procedures described in Section Section 7.1.) N
+() N
+(   When receiving 6bed4 frames over a direct 6bed4 connection when not) N
+(   being setup to perform direct 6bed4 peering to the originating 6bed4) N
+(   address, a 6bed4 peer MUST perform Optimistic Peering through) N
+(   Neighbor Solicitation.  If an attempt is already in motion, then no) N
+(   new attempts are required.) N
+() N
+(   A 6bed4 peer SHOULD send a nonce and timing information in any sent) N
+(   Neighbor Solicitation and Router Solicitation.) N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 15]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 15/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (15/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (16) 16
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   When responding to Neighbor Solicitation or Router Solicitation, a) N
+(   6bed4 peer MUST copy any nonce and timing information from the) N
+(   request into the response.) N
+() N
+(   A 6bed4 peer SHOULD send keepalive messages to keep the UDP/IPv4) N
+(   stream underlying active 6bed4 connections open.  A keepalive message) N
+(   MAY be a valid IPv6 message or anything else embedded in 6bed4, or it) N
+(   may even be an empty message embedded in 6bed4.  It MAY be sent with) N
+(   an IPv4 Time To Live that is so low that the keepalive message just) N
+(   makes it to the public Internet, after having crossed local NAT) N
+(   routers and firewalls.  The timing interval of a keepalive message) N
+(   SHOULD be a user setting, and it MAY be set to a safe low value of 30) N
+(   seconds.) N
+() N
+(8.3.  En-route 6bed4 Service Profile) N
+() N
+(   The en-route profile for 6bed4 is useful when embedding the 6bed4) N
+(   service into an ISP's services, or even within a router/gateway or) N
+(   LAN.  In all cases, the well-known address 145.136.0.1 is recognised) N
+(   as a target, and redirected to a 6bed4 service that runs locally.) N
+() N
+(   It would be possible for ISPs or local administrators to respond to a) N
+(   Router Advertisement with a /114 prefix that does not reside under) N
+(   the TBD1::/16 prefix.  If this is done, it will appear as a native) N
+(   address on the public Internet.  It should be noted that there is no) N
+(   danger of trapezium-shaped routing when en-route service is created,) N
+(   but that this will always lead to a triangle-shape routing to remote) N
+(   6bed4 peers who now cannot support direct peering.) N
+() N
+(8.4.  Aggregated 6bed4 Service Profile) N
+() N
+(   While a 6bed4 server can run on a single IPv4 address, it is possible) N
+(   to announce a shorter IPv6 prefix than the matching /48 in BGP.  One) N
+(   reason for doing this is to support individual network users at their) N
+(   full IPv4 address to create 6bed4 servers.  The responsibility of the) N
+(   BGP-announced route is then to relay incoming native IPv6 traffic to) N
+(   those 6bed4 servers as 6bed4 frames, or as native IPv6 traffic.) N
+() N
+(   An application of this profile would be a rackspace hosting provider) N
+(   that wants to support 6bed4 customer's servers running on the On-) N
+(   server Profile specified below.  Another application of this profile) N
+(   would be an ISP that makes 6bed4 service available to individual end-) N
+(   users who may run a service on their local networks.) N
+() N
+(8.5.  On-server 6bed4 Service Profile) N
+() N
+() N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 16]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 16/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (16/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (17) 17
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   A server can run its own 6bed4 server annex 6bed4 peer if it gets the) N
+(   matching IPv6 /48 prefix announced in BGP, or if an aggregated) N
+(   announcement is made by the network provider.) N
+() N
+(   The IPv6 addresses in such a setup simply mention the same general) N
+(   6bed4 address and direct 6bed4 address, and the implementation) N
+(   combines the requirements of 6bed4 server and 6bed4 peer, however) N
+(   with a short-circuit for transmission from the 6bed4 server to 6bed4) N
+(   peer.  TODO: is this consitent?) N
+() N
+(   When using a fixed IPv4 address, and when binding the 6bed4 service) N
+(   to a fixed port, then the 6bed4 address is fixed, and so is the IPv6) N
+(   address to reach this service over 6bed4.  This makes it possible to) N
+(   announce services in DNS at their 6bed4 IPv6 address, possibly in) N
+(   addition to a native IPv6 address.) N
+() N
+(8.6.  LAN-serving 6bed4 Service Profile) N
+() N
+(   A router or gateway, even as small as a home gateway, can run its own) N
+(   6bed4 server if its ISP implements the aggregated service profile for) N
+(   the IPv4 address assigned to the gateway.  Through port forwarding or) N
+(   a router module, it would then be possible to implement 6bed4 on the) N
+(   local network.) N
+() N
+(   In these setups, it is possible to offer a /64 prefix on the local) N
+(   network, and permit hosts to perform autoconfiguration based on their) N
+(   MAC address.  The resulting addresses will have the flag set that) N
+(   signals the address as globally unique, so no remote 6bed4 peer would) N
+(   try to interpret the resulting address as a combination of an IPv4) N
+(   address and a UDP port.  Local network addresses with the globaly-) N
+(   unique flag reset MUST NOT be exposed to the public Internet, not) N
+(   even to native peers, and such local addresses SHOULD be actively) N
+(   discouraged.) N
+() N
+(9.  Reducing Depenedency on Server Infrastructure) N
+() N
+(   TODO) N
+() N
+(10.  Implementation Concerns) N
+() N
+(   One potential implementation of a 6bed4 tunnel interface would) N
+(   exploit the Neighbor Cache in an IPv6 host to facilitate storage and) N
+(   timing of the various neighboring relationships.  Indeed, the) N
+(   timeouts of such relations are generally shorter than NAT mapping) N
+(   timeouts.  It should however be noted that not all Neighbor Caches) N
+(   are designed for large-scale operation, and that an active server) N
+(   could choke on that.  Furthermore, there is no keepalive mechanism) N
+(   built into such neighbor caches, which means that one or more peering) N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 17]) N
+() N
+(draft-vanrein-6bed4-02pre.txt) (Page 17/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (17/18) (Friday July 19, 2013) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (18) 18
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.703931 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Internet-Draft                    6bed4                     January 2013) p n
+() N
+() N
+(   relations could loose their address when no traffic is exchanged for) N
+(   some time.) N
+() N
+(11.  IANA Considerations) N
+() N
+(   This specification reserves a 16-bit address prefix in the IPv6) N
+(   address space for a period of ten years, starting from the date of) N
+(   publication of this specification.) N
+() N
+(   The prefix is TBD1::/16 and will be exclusively used for 6bed4) N
+(   addresses.) N
+() N
+(   The UDP port TBD2 is allocated as the default port for 6bed4 frame) N
+(   send and reception.) N
+() N
+(   The IPv4 address range 145.136.0/24 and specifically the address) N
+(   145.136.0.1 are donated back to the community as an anycast address) N
+(   on which 6bed4 service can be obtained without configuration.) N
+() N
+(12.  Security Considerations) N
+() N
+(   TODO -- RFC 6169 -- egress filter -- bypass firewalls) N
+() N
+(13.  References) N
+() N
+(Appendix A.  TODO:back matter) N
+() N
+(   TODO) N
+() N
+(Author's Address) N
+() N
+(   Rick van Rein) N
+(   OpenFortress B.V.) N
+(   Haarlebrink 5) N
+(   Enschede, Overijssel  7544 WP) N
+(   The Netherlands) N
+() N
+(   Email: rick@openfortress.nl) N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+() N
+(Van Rein                  Expires July 20, 2013                [Page 18]) N
+(draft-vanrein-6bed4-02pre.txt) (Page 18/18) (Jul 19, 13 10:22) title
+border
+grestore
+(Printed by Rick van Rein) rhead
+() (Friday July 19, 2013) (18/18) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF
