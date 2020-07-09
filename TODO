@@ -1,7 +1,30 @@
-- Consider ALPN [RFC 7301] to set the "6bed4" protocol; srv differentiate of flag
-- Add a tunnel type for RADIUS, as per RFC2868
++ Rewrite direct peering, no protocol specifics but generic support
+X Consider ALPN [RFC 7301] to set the "6bed4" protocol; srv differentiate of flag
+X Add a tunnel type for RADIUS, as per RFC2868
 	requires IETF Consensus; that is not okay as per RFC 5226
 	https://www.rfc-editor.org/about/independent/
-- Consider it as a part of the Funnel Tunnel (per TCP or for all IP)
-- Consider keeping RoHC as a separate prt of Funnel Tunnel
-- Would probably call for coro implementation?
+X Consider it as a part of the Funnel Tunnel (per TCP or for all IP)
+X Consider keeping RoHC as a separate part of Funnel Tunnel
+X Would probably call for coro implementation?
+X UDP Port 0 is illegal; suggest it for local overrides; frees ::1 to ::16383
+X RFC2372 reference is off (TIP) -- moet RFC 2373 zijn, specifieker 2.5.1
+X Is it possible at all to set fe80:/10 without ...ff:fe... reshaped MAC address?
+X When fallback.ipv4 == endpoint.ipv4, do we (always) use the endpoint.udp?
+- Dicuss 6bed4concentrator -- and 6bed4node as a better alternative
+- Consider discussing software, non-normatively, in an appendix
+X Mention 145.136.0.1 non-normatively, and running over TCP and TLS
++ "Fallback" is een vage term, zegt Henri
++ Ik vind de adresvormen, met name de virtuele zesbyter, wat vaag
++ .H / .h / .l / .L is warrig -> .0 .1 .2 .3 / .A / .B / .C / .D
++ Anarchistische 6bed4 variant: /64 anders, de rest als 6bed4, ook s/ware
++ Bedank Henri !!
++ p2p leg ik dat uit (wegvallen symnat tenzij port fwd)
++ native ipv6 (6bed4node) gebruikt Managed / DHCPv6
++ local address mode uses fc64:6be4::/32 prefix en routeert alleen intern
++ denk ook na over randomised local prefixes fcXX:XXXX::/32 met soft convention
++ consider describing operational modes for 6bed4router and 6bed4node
++ prefix in RA is /114 en moet extra prefixes hebben (zie 6bed4node document)
++ consider dropping RoHC -- too sparsely supported -- and, occupies nibbles
++ operational hint appendix: fc64:<netid>::/32, port-0/112, HIP
++ lower half address 0.0.0.0 indicates "no routable IPv4 address" (future!)
+- UDP splashing towards clients -- can be remedied with a client's Bloom filter
